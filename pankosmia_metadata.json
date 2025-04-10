@@ -1,0 +1,18 @@
+{
+  "id": "xenizo-parallel-gospels",
+  "require": {
+    "net": false,
+    "debug": true
+  },
+  "i18n": {
+    "title": {
+      "en": "Parallel Gospels"
+    },
+    "summary": {
+      "en": "A parallel view for the gospels"
+    },
+    "stub_content": {
+      "en": "Content goes here"
+    }
+  }
+}
