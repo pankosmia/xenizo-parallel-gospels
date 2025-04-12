@@ -6,7 +6,7 @@ import Parallel from "./components/Parallel";
 
 function App() {
     const [maxWindowHeight, setMaxWindowHeight] = useState(window.innerHeight - 64);
-    const [tabNo, setTabNo] = useState(0);
+    const [tabNo, setTabNo] = useState(1);
     const handleWindowResize = useCallback(event => {
         setMaxWindowHeight(window.innerHeight - 64);
     }, []);
@@ -71,16 +71,16 @@ function App() {
                 <Tab label="|||||" {...a11yProps(4)} />
             </Tabs>
             <TabPanel value={tabNo} index={0}>
-                <SingleBook src="MAT.json"/>
+                <SingleBook src="MAT"/>
             </TabPanel>
             <TabPanel value={tabNo} index={1}>
-                <SingleBook src="MRK.json"/>
+                <SingleBook src="MRK"/>
             </TabPanel>
             <TabPanel value={tabNo} index={2}>
-                <SingleBook src="LUK.json"/>
+                <SingleBook src="LUK"/>
             </TabPanel>
             <TabPanel value={tabNo} index={3}>
-                <SingleBook src="JHN.json"/>
+                <SingleBook src="JHN"/>
             </TabPanel>
             <TabPanel value={tabNo} index={4}>
                 <Parallel srcSpec={[
