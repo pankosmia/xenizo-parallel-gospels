@@ -5,10 +5,10 @@ import styles from './sentencePicker.css';
 export default function SentencePicker({value, setValue, maxValue}) {
     const id = React.useId();
     return (
-        <NumberField.Root id={id} value={value} onValueChange={setValue} min={0} max={maxValue} className={styles.Field}>
+        <NumberField.Root id={id} value={value} onValueChange={setValue} min={1} max={maxValue} className={styles.Field}>
             <NumberField.ScrubArea className={styles.ScrubArea}>
                 <label htmlFor={id} className={styles.Label}>
-                    {"Sentence N°"}
+                    {`Sentence N° (1-${maxValue})`}
                 </label>
                 <NumberField.ScrubAreaCursor className={styles.ScrubAreaCursor}>
                     <CursorGrowIcon />

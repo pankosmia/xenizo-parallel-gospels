@@ -2,24 +2,17 @@ import {useState, useEffect, useContext} from 'react';
 import {Box, Divider, Grid2} from '@mui/material';
 import SentencePicker from './SentencePicker';
 import {getAndSetJson, getText, debugContext} from 'pithekos-lib';
-
+import CVDisplay from "./CVDisplay";
+import MaybeNotes from "./MaybeNotes";
+import {unpackJRef} from "../utils/jRef";
 
 export default function SingleBook({src}) {
 
     const [sourcesFound, setSourcesFound] = useState(false);
     const [criticalNotes, setCriticalNotes] = useState([]);
     const [juxtaSentences, setJuxtaSentences] = useState({sentences: []});
-    const [juxtaSentenceN, setJuxtaSentenceN] = useState(0);
+    const [juxtaSentenceN, setJuxtaSentenceN] = useState(1);
     const {debugRef} = useContext(debugContext);
-
-    const unpackJRef = ref => {
-        const [_, sentenceRange] = ref.split(":");
-        let [fromSentence, toSentence] = sentenceRange.split("-");
-        if (!toSentence) {
-            toSentence = fromSentence;
-        }
-        return [parseInt(fromSentence), parseInt(toSentence)];
-    }
 
     useEffect(
         () => {
@@ -36,7 +29,7 @@ export default function SingleBook({src}) {
                                         .slice(1)
                                         .map(r => r.split("\t"))
                                         .filter(r => r.length > 1)
-                                        .map(r => [...r.slice(0, 2), unpackJRef(r[2]), ...r.slice(4)])
+                                        .map(r => [...r.slice(0, 2), unpackJRef(r[2]), ...r.slice(3)])
                                 )
                             }
                         })
@@ -48,13 +41,14 @@ export default function SingleBook({src}) {
         [src]
     );
 
-    console.log(JSON.stringify(criticalNotes, null, 2));
-
     return sourcesFound ?
         (
-            juxtaSentences.sentences.length > juxtaSentenceN ?
+            juxtaSentences.sentences.length >= juxtaSentenceN ?
                 <Box>
                     <Grid2 container display="flex" direction="row" spacing={1}>
+                        <Grid2 item size={12}>
+                            <CVDisplay book={juxtaSentences.bookCode} sentence={juxtaSentences.sentences[juxtaSentenceN - 1]}/>
+                        </Grid2>
                         <Grid2 item size={12}>
                             <SentencePicker
                                 value={juxtaSentenceN}
@@ -66,20 +60,27 @@ export default function SingleBook({src}) {
                                         }
                                     }
                                 }
-                                maxValue={juxtaSentences.sentences.length - 1}
+                                maxValue={juxtaSentences.sentences.length}
                             />
                         </Grid2>
                         <Grid2 item size={12}>
-                            {juxtaSentences.sentences[juxtaSentenceN].sourceString}
+                            <Divider/>
+                        </Grid2>
+                        <Grid2 item size={12}>
+                            {juxtaSentences.sentences[juxtaSentenceN - 1].sourceString}
+                        </Grid2>
+                        <Grid2 item size={12}>
+                            <MaybeNotes source={criticalNotes} sentenceN={juxtaSentenceN - 1}/>
                         </Grid2>
                         <Grid2 item size={12}>
                             <Divider/>
                         </Grid2>
                         {
-                            juxtaSentences.sentences[juxtaSentenceN].chunks
+                            juxtaSentences.sentences[juxtaSentenceN - 1].chunks
                                 .map(
-                                    c => <>
+                                    (c, n) => <>
                                         <Grid2
+                                            key={n}
                                             display="flex"
                                             item
                                             size={6}
