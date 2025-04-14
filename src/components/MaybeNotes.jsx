@@ -1,12 +1,17 @@
 import {useState} from 'react';
 import IconButton from '@mui/material/IconButton';
 import CommentIcon from '@mui/icons-material/Comment';
-import {matchingSentence} from "../utils/jRef";
+import {matchingSentence, matchingSentenceClause} from "../utils/jRef";
 import {Grid2, Typography} from "@mui/material";
 
-export default function MaybeNotes({source, sentenceN}) {
+export default function MaybeNotes({source, sentenceN, clause=null}) {
     const [showNotes, setShowNotes] = useState(false);
-    const matchingNotes = source.filter(note => matchingSentence(note[2].map(v => v - 1), sentenceN));
+    let matchingNotes;
+    if (clause === null) {
+        matchingNotes = source.filter(note => matchingSentence(note[2].map(v => v - 1), sentenceN))
+    } else {
+        matchingNotes = source.filter(note => matchingSentenceClause([note[2][0] - 1, note[2][1]], sentenceN, clause))
+    }
     if (matchingNotes.length === 0) {
         return <IconButton  disabled={true}><CommentIcon/></IconButton>;
     } else {
