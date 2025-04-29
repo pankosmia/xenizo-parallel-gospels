@@ -1,6 +1,6 @@
 import {useState, useEffect, useContext} from 'react';
 import {getJson, getAndSetJson, debugContext} from "pithekos-lib";
-import {Button, Grid2} from "@mui/material";
+import {Button, Grid2, Typography} from "@mui/material";
 
 export default function Parallel() {
 
@@ -77,6 +77,11 @@ export default function Parallel() {
                 {contentView}
             </Button>
             <Grid2 container style={{fontSize: "x-small"}}>
+                <Grid2 item size={12}>
+                    <Typography variant="h6">To use this experimental page you will need to download some
+                        resources from BurritoTruck: XPG; NTJXT; NCX</Typography>
+                    <Typography variant="h6">Critical notes only exist for MRK</Typography>
+                </Grid2>
                 {
                     parallel.map((line, n) => <>{
                             ["MRK", "LUK", "MAT", "JHN"].map(

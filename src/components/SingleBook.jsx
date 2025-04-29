@@ -1,5 +1,5 @@
 import {useState, useEffect, useContext} from 'react';
-import {Box, Divider, Grid2} from '@mui/material';
+import {Box, Divider, Grid2, Typography} from '@mui/material';
 import SentencePicker from './SentencePicker';
 import {getAndSetJson, getText, debugContext} from 'pithekos-lib';
 import CVDisplay from "./CVDisplay";
@@ -60,6 +60,11 @@ export default function SingleBook({src}) {
             juxtaSentences.sentences.length >= juxtaSentenceN ?
                 <Box>
                     <Grid2 container display="flex" direction="row" spacing={1}>
+                        <Grid2 item size={12}>
+                            <Typography variant="h6">To use this experimental page you will need to download some
+                                resources from BurritoTruck: XPG; NTJXT; NCX</Typography>
+                            <Typography variant="h6">Critical notes only exist for MRK</Typography>
+                        </Grid2>
                         <Grid2 item size={12}>
                             <CVDisplay book={juxtaSentences.bookCode}
                                        sentence={juxtaSentences.sentences[juxtaSentenceN - 1]}/>

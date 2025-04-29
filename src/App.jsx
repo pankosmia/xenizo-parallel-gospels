@@ -1,6 +1,6 @@
 import {useContext, useState, useCallback, useEffect} from 'react';
 import {Box, Typography, Tabs, Tab, Stack} from "@mui/material";
-import {i18nContext, doI18n} from "pithekos-lib";
+import {i18nContext} from "pithekos-lib";
 import SingleBook from "./components/SingleBook";
 import Parallel from "./components/Parallel";
 
