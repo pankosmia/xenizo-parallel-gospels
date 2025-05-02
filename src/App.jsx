@@ -5,10 +5,10 @@ import SingleBook from "./components/SingleBook";
 import Parallel from "./components/Parallel";
 
 function App() {
-    const [maxWindowHeight, setMaxWindowHeight] = useState(window.innerHeight - 64);
+    const [maxWindowHeight, setMaxWindowHeight] = useState(window.innerHeight - 80);
     const [tabNo, setTabNo] = useState(1);
     const handleWindowResize = useCallback(event => {
-        setMaxWindowHeight(window.innerHeight - 64);
+        setMaxWindowHeight(window.innerHeight - 80);
     }, []);
     const {i18nRef} = useContext(i18nContext);
 
