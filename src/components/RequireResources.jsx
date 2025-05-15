@@ -16,13 +16,13 @@ export default function RequireResources({required, children}) {
         []
     );
 
-    const missingResources = required.filter(r => !resources.includes(r));
+    const missingResources = required.filter(r => !resources.includes(r[1]));
     if (missingResources.length > 0) {
         return <Stack>
-            <Typography variant="h6">{doI18n("components:require-resources:missing-resources", i18nRef.current)}</Typography>
+            <Typography variant="h6">{- }{doI18n("components:require_resources:missing_resources", i18nRef.current)}</Typography>
             {
                 missingResources.map(
-                    mr => <Typography>{mr}</Typography>
+                    mr => <Typography>{mr[0]}</Typography>
                 )
             }
         </Stack>

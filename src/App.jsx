@@ -1,6 +1,7 @@
 import {useCallback, useContext, useEffect, useState} from "react";
 import {i18nContext} from "pithekos-lib";
 import RequireResources from "./components/RequireResources";
+import {Box} from "@mui/material";
 
 export default function App() {
     const [maxWindowHeight, setMaxWindowHeight] = useState(window.innerHeight - 80);
@@ -17,7 +18,16 @@ export default function App() {
         };
     }, [handleWindowResize]);
 
-    return <RequireResources required={["git.door43.org/BurritoTruck/en_syn", "git.door43.org/BurritoTruck/fr_juxta"]}>
-        Ready!
-    </RequireResources>
+    return <Box
+        sx={{maxHeight: maxWindowHeight}}
+    >
+        <RequireResources
+            required={[
+                ["Xenizo Parallel Gospels (XPG)", "git.door43.org/BurritoTruck/en_syn",],
+                ["New testament Juxtalinear (NTJXT)", "git.door43.org/BurritoTruck/fr_juxta"]
+            ]}
+        >
+            Ready!
+        </RequireResources>
+    </Box>
 }
