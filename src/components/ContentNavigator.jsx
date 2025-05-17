@@ -2,25 +2,27 @@ import {Button, ButtonGroup, Stack, Typography} from "@mui/material";
 import {useState} from "react";
 
 
-export default function ContentNavigator({sections, sectionsI18n, sectionPointer, setSectionPointer}) {
-    const books = ["MAT", "MRK", "LUK", "JHN"];
+export default function ContentNavigator({books, sections, sectionsI18n, sectionPointer, setSectionPointer}) {
     const [navLevel, setNavLevel] = useState("book");
-    const bookSections = Object.entries(sections)
-        .filter(s => s[1][sectionPointer[0]].cvs)
-        .sort(
-            (a, b) => {
-                const cvA = a[1][sectionPointer[0]].cvs;
-                const cA = parseInt(cvA.split(":")[0]);
-                const cvB = b[1][sectionPointer[0]].cvs;
-                const cB = parseInt(cvB.split(":")[0]);
-                if (cA !== cB) {
-                    return cA - cB;
+    const sectionsForBook = bookCode => {
+        return Object.entries(sections)
+            .filter(s => s[1][bookCode].cvs)
+            .sort(
+                (a, b) => {
+                    const cvA = a[1][bookCode].cvs;
+                    const cA = parseInt(cvA.split(":")[0]);
+                    const cvB = b[1][bookCode].cvs;
+                    const cB = parseInt(cvB.split(":")[0]);
+                    if (cA !== cB) {
+                        return cA - cB;
+                    }
+                    const vA = parseInt(cvA.split(":")[1].split("-")[0]);
+                    const vB = parseInt(cvB.split(":")[1].split("-")[0]);
+                    return vA - vB;
                 }
-                const vA = parseInt(cvA.split(":")[1].split("-")[0]);
-                const vB = parseInt(cvB.split(":")[1].split("-")[0]);
-                return vA - vB;
-            }
-        )
+            )
+    }
+    const bookSections = sectionsForBook(sectionPointer[0]);
 
     const nextBook = () => {
         const currentBookIndex = books.indexOf(sectionPointer[0]);
@@ -39,7 +41,8 @@ export default function ContentNavigator({sections, sectionsI18n, sectionPointer
             const previousSection = sectionPointer[1] - 1;
             if (previousSection < 0) {
                 if (previousBook()) {
-                    return [previousBook(), 0, 0];
+                    const previousBookSections = sectionsForBook(previousBook());
+                    return [previousBook(), previousBookSections.length - 1, 0];
                 } else {
                     return null;
                 }
@@ -52,7 +55,13 @@ export default function ContentNavigator({sections, sectionsI18n, sectionPointer
             const previousSection = sectionPointer[1] - 1;
             if (previousSection < 0) {
                 if (previousBook()) {
-                    return [previousBook(), 0, 0];
+                    const previousBookSections = sectionsForBook(previousBook());
+                    const previousBookUnits = previousBookSections[previousBookSections.length - 1][1][previousBook()]["units"];
+                    return [
+                        previousBook(),
+                        previousBookSections.length - 1,
+                        previousBookUnits.length - 1,
+                    ];
                 } else {
                     return null;
                 }
@@ -109,25 +118,26 @@ export default function ContentNavigator({sections, sectionsI18n, sectionPointer
     }
 
     const renderDestination = destination => {
+        const destinationBookSections = sectionsForBook(destination[0]);
         if (navLevel === "book") {
-            return <Typography>{destination[0]}</Typography>;
+            return <Typography variant="body2">{destination[0]}</Typography>;
         }
         if (navLevel === "section") {
             let ret = [];
             if (destination[0] !== sectionPointer[0]) {
-                ret.push(<Typography>{destination[0]}</Typography>);
+                ret.push(<Typography variant="caption">{destination[0]}</Typography>);
             }
-            ret.push(<Typography>{sectionsI18n["fr"][bookSections[destination[1]][0]]["title"]}</Typography>);
+            ret.push(<Typography variant="body2">{sectionsI18n["fr"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
             return ret;
         }
         let ret = [];
         if (destination[0] !== sectionPointer[0]) {
-            ret.push(<Typography>{destination[0]}</Typography>);
+            ret.push(<Typography variant="caption">{destination[0]}</Typography>);
         }
         if (destination[1] !== sectionPointer[1]) {
-            ret.push(<Typography>{sectionsI18n["fr"][bookSections[destination[1]][0]]["title"]}</Typography>);
+            ret.push(<Typography variant="caption">{sectionsI18n["fr"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
         }
-        ret.push(<Typography>{bookSections[destination[1]][1][destination[0]]["units"][destination[2]]["cv"]}</Typography>);
+        ret.push(<Typography variant="body2">{destinationBookSections[destination[1]][1][destination[0]]["units"][destination[2]]["cv"]}</Typography>);
         return ret;
     }
 
@@ -149,7 +159,7 @@ export default function ContentNavigator({sections, sectionsI18n, sectionPointer
                 size="small"
                 onClick={() => setNavLevel("book")}
             >
-                <Typography>{sectionPointer[0]}</Typography>
+                <Typography variant="body2">{sectionPointer[0]}</Typography>
             </Button>
             <Button
                 variant={navLevel === "section" ? "contained" : "outlined"}
@@ -157,7 +167,7 @@ export default function ContentNavigator({sections, sectionsI18n, sectionPointer
                 size="small"
                 onClick={() => setNavLevel("section")}
             >
-                <Typography>
+                <Typography variant="body2">
                     {sectionsI18n["fr"][bookSections[sectionPointer[1]][0]]["title"]}
                     {" ("}
                     {bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
@@ -170,7 +180,7 @@ export default function ContentNavigator({sections, sectionsI18n, sectionPointer
                 size="small"
                 onClick={() => setNavLevel("unit")}
             >
-                <Typography>
+                <Typography variant="body2">
                     {bookSections[sectionPointer[1]][1][sectionPointer[0]]["units"][sectionPointer[2]]["cv"]}
                 </Typography>
             </Button>

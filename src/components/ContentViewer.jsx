@@ -83,8 +83,11 @@ export default function ContentViewer () {
         return <Box>Loading...</Box>
     }
 
+    const books = ["MAT", "MRK", "LUK", "JHN"];
+
     return <Stack>
         <ContentNavigator
+            books={books}
             sectionPointer={sectionPointer}
             setSectionPointer={setSectionPointer}
             sections={sections}
