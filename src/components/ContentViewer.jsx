@@ -2,6 +2,9 @@ import {useEffect, useState} from "react";
 import {getJson, getAndSetJson} from 'pithekos-lib';
 import ContentNavigator from "./ContentNavigator";
 import {Box, Stack} from "@mui/material";
+import BookContent from "./BookContent";
+import SectionContent from "./SectionContent";
+import UnitContent from "./UnitContent";
 
 export default function ContentViewer () {
     const [juxtas, setJuxtas] = useState({});
@@ -9,6 +12,7 @@ export default function ContentViewer () {
     const [sectionsI18n, setSectionsI18n] = useState({});
     const [sectionOrders, setSectionOrders] = useState({});
     const [sectionPointer, setSectionPointer] = useState(["MRK", 0, 0]);
+    const [navLevel, setNavLevel] = useState("book");
 
     useEffect(
         () => {
@@ -79,11 +83,15 @@ export default function ContentViewer () {
         []
     );
 
-    if (!sections || !juxtas[sectionPointer[0]] || !sectionsI18n["fr"]) {
+    if (!sections || !sectionsI18n["fr"]) {
         return <Box>Loading...</Box>
     }
 
     const books = ["MAT", "MRK", "LUK", "JHN"];
+
+    if (!sections) {
+        return <Box>Loading...</Box>
+    }
 
     return <Stack>
         <ContentNavigator
@@ -93,7 +101,27 @@ export default function ContentViewer () {
             sections={sections}
             sectionOrders={sectionOrders}
             sectionsI18n={sectionsI18n}
+            navLevel={navLevel}
+            setNavLevel={setNavLevel}
         />
+        {
+            (navLevel === "book") &&
+            <BookContent
+                sectionPointer={sectionPointer}
+            />
+        }
+        {
+            (navLevel === "section") &&
+            <SectionContent
+                sectionPointer={sectionPointer}
+            />
+        }
+        {
+            (navLevel === "unit") &&
+            <UnitContent
+                sectionPointer={sectionPointer}
+            />
+        }
     </Stack>
 
 }

@@ -2,8 +2,7 @@ import {Button, ButtonGroup, Stack, Typography} from "@mui/material";
 import {useState} from "react";
 
 
-export default function ContentNavigator({books, sections, sectionsI18n, sectionPointer, setSectionPointer}) {
-    const [navLevel, setNavLevel] = useState("book");
+export default function ContentNavigator({books, navLevel, setNavLevel, sections, sectionsI18n, sectionPointer, setSectionPointer}) {
     const sectionsForBook = bookCode => {
         return Object.entries(sections)
             .filter(s => s[1][bookCode].cvs)
@@ -35,7 +34,11 @@ export default function ContentNavigator({books, sections, sectionsI18n, section
 
     const previousThing = () => {
         if (navLevel === "book") {
-            return [previousBook(), 0, 0]
+            if (previousBook()) {
+                return [previousBook(), 0, 0];
+            } else {
+                return null;
+            }
         }
         if (navLevel === "section") {
             const previousSection = sectionPointer[1] - 1;
@@ -76,7 +79,11 @@ export default function ContentNavigator({books, sections, sectionsI18n, section
 
     const nextThing = () => {
         if (navLevel === "book") {
-            return [nextBook(), 0, 0]
+            if (nextBook()) {
+                return [nextBook(), 0, 0];
+            } else {
+                return null;
+            }
         }
         if (navLevel === "section") {
             const nextSection = sectionPointer[1] + 1;
