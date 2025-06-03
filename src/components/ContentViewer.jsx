@@ -40,9 +40,9 @@ export default function ContentViewer () {
                 }
                 setSectionOrders(newSectionOrders);
             };
-            getSectionOrders(["MRK"]).then();
+            getSectionOrders([sectionPointer[0]]).then();
         },
-        []
+        [sectionPointer]
     );
 
     useEffect(
@@ -61,7 +61,7 @@ export default function ContentViewer () {
             };
             getSectionI18ns(["en", "fr"]).then();
         },
-        []
+        [sectionPointer]
     );
 
     useEffect(
@@ -89,10 +89,6 @@ export default function ContentViewer () {
 
     const books = ["MAT", "MRK", "LUK", "JHN"];
 
-    if (!sections) {
-        return <Box>Loading...</Box>
-    }
-
     return <Stack>
         <ContentNavigator
             books={books}
@@ -114,6 +110,9 @@ export default function ContentViewer () {
             (navLevel === "section") &&
             <SectionContent
                 sectionPointer={sectionPointer}
+                sections={sections}
+                sectionsI18n={sectionsI18n}
+                sectionOrders={sectionOrders}
             />
         }
         {
