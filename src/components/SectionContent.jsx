@@ -18,16 +18,17 @@ function PaneContentPicker({sectionPointer, paneChoiceGetter, paneChoiceSetter, 
     useEffect(
         () => {
             let newFullPaneChoices = {...standardPaneChoices};
+            console.log("newChoices", newFullPaneChoices);
             if (includeParallels) {
                 for (const bookCode of Object.entries(section || {})
-                    .filter(kv => Object.entries(kv[1]).length > 0 && kv[0] !== sectionPointer[0])
+                    .filter(kv => (Object.entries(kv[1]).length > 0) && (kv[0] !== sectionPointer[0]))
                     .map(kv => kv[0])) {
                     newFullPaneChoices[bookCode] = `|| ${bookCode}`;
                 }
                 setFullPaneChoices(newFullPaneChoices);
             }
         },
-        [sectionPointer]
+        [sectionPointer, section.cvs]
     );
     return <ButtonGroup>
         {
@@ -104,6 +105,9 @@ function UsfmViewer({content, sectionPointer, cvs}) {
         }
     }`;
     const result = pk.gqlQuerySync(query);
+    if (!result.data.docSet.document) {
+        return <p>Loading...</p>;
+    }
     return <>
         {
             result.data.docSet.document.mainSequence.blocks.map(
@@ -321,6 +325,15 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                             content={Sources[sectionPointer[0]]}
                             sectionPointer={sectionPointer}
                             cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                        />
+                    }
+                    {
+                        ["MAT", "MRK", "LUK", "JHN"].includes(paneChoices[1]) &&
+                        GLs[paneChoices[1]] &&
+                        <UsfmViewer
+                            content={GLs[paneChoices[1]]}
+                            sectionPointer={[paneChoices[1], ...sectionPointer.slice(1)]}
+                            cvs={bookSections[sectionPointer[1]][1][paneChoices[1]]["cvs"]}
                         />
                     }
 
