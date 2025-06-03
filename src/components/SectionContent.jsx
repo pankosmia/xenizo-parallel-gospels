@@ -3,6 +3,7 @@ import {useEffect, useState, useContext} from "react";
 import RequireResources from "./RequireResources";
 import {getText, debugContext} from "pithekos-lib";
 import {Proskomma} from "proskomma-core";
+import Markdown from "react-markdown";
 
 const standardPaneChoices = {
     "source": "Source",
@@ -45,6 +46,44 @@ function PaneContentPicker({sectionPointer, paneChoiceGetter, paneChoiceSetter, 
     </ButtonGroup>
 }
 
+function SNViewer({content, cvs}) {
+    const cvInRange = (cv, range) => {
+        const [cvC, cvV] = cv.split(":");
+        const [rangeC, rangeV] = range.split(":");
+        if (cvC !== rangeC) {
+            return false;
+        }
+        if (rangeV.includes("-")) {
+            const [fromV, toV] = rangeV.split("-").map(v => parseInt(v));
+            return (cvV >= fromV && cvV <= toV)
+        } else {
+            return (cvV === rangeV);
+        }
+    };
+
+    const firstVerse = cvs.split("-")[0];
+    return <Typography variant="body2" sx={{fontStyle: "italic"}}>
+        {
+            content
+                .filter(r => cvInRange(firstVerse, r[0]))
+                .map(r => <Typography variant="body2">{r[6]}</Typography>)
+        }
+    </Typography>
+}
+
+function JuxtaGlossViewer({content, sectionPointer, firstSentence, lastSentence}) {
+    return content.slice(firstSentence, lastSentence)
+        .map(
+            s => <Markdown>
+                {
+                    s.chunks
+                        .map(c => c.gloss)
+                        .join(" ")
+                }
+            </Markdown>
+        )
+}
+
 function UsfmViewer({content, sectionPointer, cvs}) {
     if (!content) {
         return <p>Loading...</p>;
@@ -73,7 +112,12 @@ function UsfmViewer({content, sectionPointer, cvs}) {
                         .map(
                             i => {
                                 if (i.type === "scope" && i.subType === "start" && i.payload.startsWith("verses/")) {
-                                    return <b>{i.payload.split("/")[1]}</b>;
+                                    return <Typography
+                                        display="inline"
+                                        sx={{fontWeight: "bold", fontSize: "75%", paddingRight: "0.25em"}}
+                                    >
+                                        {i.payload.split("/")[1]}
+                                    </Typography>;
                                 } else if (i.type === "token") {
                                     return i.payload;
                                 }
@@ -85,7 +129,7 @@ function UsfmViewer({content, sectionPointer, cvs}) {
     </>
 }
 
-export default function SectionContent({sectionPointer, sections, sectionsI18n, sectionOrders}) {
+export default function SectionContent({sectionPointer, sections, sectionsI18n, sectionOrders, juxtas}) {
     const {debugRef} = useContext(debugContext);
     const [paneChoices, setPaneChoices] = useState(["juxtaGl", "gl"]);
     const [GLs, setGLs] = useState({});
@@ -166,7 +210,10 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         debugRef.current
                     );
                     if (response.ok) {
-                        newSNs[bookCode] = response.text;
+                        newSNs[bookCode] = response.text
+                            .split("\n")
+                            .slice(1)
+                            .map(r => r.split("\t"));
                     } else {
                         console.log(`Could not load SN text for ${bookCode}: ${response.error}`);
                     }
@@ -190,6 +237,16 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
         ]}
     >
         <Grid2 container sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", mt: 2, borderRadius: 1}}>
+            <Grid2 item size={12}>
+                <Stack sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", p: 2, borderRadius: 1}}>
+                    {
+                        SNs[sectionPointer[0]] && <SNViewer
+                            content={SNs[sectionPointer[0]]}
+                            cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                        />
+                    }
+                </Stack>
+            </Grid2>
             <Grid2 item size={6}>
                 <Stack sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", p: 2}}>
                     <PaneContentPicker
@@ -206,6 +263,16 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                             content={GLs[sectionPointer[0]]}
                             sectionPointer={sectionPointer}
                             cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                        />
+                    }
+                    {
+                        paneChoices[0] === "juxtaGl" &&
+                        juxtas[sectionPointer[0]] &&
+                        <JuxtaGlossViewer
+                            content={juxtas[sectionPointer[0]]}
+                            sectionPointer={sectionPointer}
+                            firstSentence={bookSections[sectionPointer[1]][1][sectionPointer[0]]["firstSentence"]}
+                            lastSentence={bookSections[sectionPointer[1]][1][sectionPointer[0]]["lastSentence"]}
                         />
                     }
                     {
@@ -228,12 +295,35 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         sectionPointer={sectionPointer}
                         includeParallels={true}
                     />
-                    <Typography variant="h4">{paneChoices[1]}</Typography>
-                </Stack>
-            </Grid2>
-            <Grid2 item size={12}>
-                <Stack sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", p: 2, borderRadius: 1}}>
-                    <Typography variant="h4">Section Notes</Typography>
+                    {
+                        paneChoices[1] === "gl" &&
+                        GLs[sectionPointer[0]] &&
+                        <UsfmViewer
+                            content={GLs[sectionPointer[0]]}
+                            sectionPointer={sectionPointer}
+                            cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                        />
+                    }
+                    {
+                        paneChoices[1] === "juxtaGl" &&
+                        juxtas[sectionPointer[0]] &&
+                        <JuxtaGlossViewer
+                            content={juxtas[sectionPointer[0]]}
+                            sectionPointer={sectionPointer}
+                            firstSentence={bookSections[sectionPointer[1]][1][sectionPointer[0]]["firstSentence"]}
+                            lastSentence={bookSections[sectionPointer[1]][1][sectionPointer[0]]["lastSentence"]}
+                        />
+                    }
+                    {
+                        paneChoices[1] === "source" &&
+                        Sources[sectionPointer[0]] &&
+                        <UsfmViewer
+                            content={Sources[sectionPointer[0]]}
+                            sectionPointer={sectionPointer}
+                            cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                        />
+                    }
+
                 </Stack>
             </Grid2>
         </Grid2>

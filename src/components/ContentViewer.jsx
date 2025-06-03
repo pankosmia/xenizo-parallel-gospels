@@ -113,6 +113,7 @@ export default function ContentViewer () {
                 sections={sections}
                 sectionsI18n={sectionsI18n}
                 sectionOrders={sectionOrders}
+                juxtas={juxtas}
             />
         }
         {
