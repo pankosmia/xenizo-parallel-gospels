@@ -1,5 +1,9 @@
-import {Button, ButtonGroup, Stack, Typography} from "@mui/material";
-import CompareIcon from "@mui/icons-material/Compare"
+import {Button, ButtonGroup, Stack, Typography, Dialog, Toolbar, AppBar} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
+import CompareIcon from '@mui/icons-material/Compare';
+import {useState} from "react";
+import Parallel from "./Parallel";
+import IconButton from "@mui/material/IconButton";
 
 export default function ContentNavigator(
     {
@@ -7,6 +11,7 @@ export default function ContentNavigator(
         navLevel,
         setNavLevel,
         sections,
+        sectionOrders,
         sectionsI18n,
         sectionPointer,
         setSectionPointer
@@ -160,78 +165,107 @@ export default function ContentNavigator(
         return ret;
     }
 
-    return <ButtonGroup sx={{width: '100%'}}>
-        <Button
-            sx={{width: '30%'}}
-            size="small"
-            disabled={!previousThing()}
-            onClick={() => setSectionPointer(previousThing())}
-        >
-            {
-                (previousThing() && <Stack>{renderDestination(previousThing())}</Stack>) || "-"
-            }
-        </Button>
-        <ButtonGroup orientation="vertical" sx={{width: '40%'}}>
-            <ButtonGroup>
+    const [parallelOpen, setParallelOpen] = useState(false);
+    return <>
+        <ButtonGroup sx={{width: '100%'}}>
+            <Button
+                sx={{width: '30%'}}
+                size="small"
+                disabled={!previousThing()}
+                onClick={() => setSectionPointer(previousThing())}
+            >
+                {
+                    (previousThing() && <Stack>{renderDestination(previousThing())}</Stack>) || "-"
+                }
+            </Button>
+            <ButtonGroup orientation="vertical" sx={{width: '40%'}}>
+                <ButtonGroup>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        color="secondary"
+                        sx={{width: '20%'}}
+                    />
+                    <Button
+                        sx={{width: '60%'}}
+                        variant={navLevel === "book" ? "contained" : "outlined"}
+                        color="secondary"
+                        size="small"
+                        onClick={() => setNavLevel("book")}
+                    >
+                        <Typography variant="body2">{sectionPointer[0]}</Typography>
+                    </Button>
+                    <Button
+                        variant="contained"
+                        size="large"
+                        color="secondary"
+                        sx={{width: '20%'}}
+                        onClick={() => setParallelOpen(true)}
+                        endIcon={<CompareIcon/>}
+                    >
+                        Comparer
+                    </Button>
+                </ButtonGroup>
                 <Button
-                    variant="contained"
-                    size="large"
-                    color="secondary"
-                    sx={{width: '20%'}}
-                />
-                <Button
-                    sx={{width: '60%'}}
-                    variant={navLevel === "book" ? "contained" : "outlined"}
+                    variant={navLevel === "section" ? "contained" : "outlined"}
                     color="secondary"
                     size="small"
-                    onClick={() => setNavLevel("book")}
+                    onClick={() => setNavLevel("section")}
                 >
-                    <Typography variant="body2">{sectionPointer[0]}</Typography>
+                    <Typography variant="body2">
+                        {sectionsI18n["fr"][bookSections[sectionPointer[1]][0]]["title"]}
+                        {" ("}
+                        {bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                        {")"}
+                    </Typography>
                 </Button>
                 <Button
-                    variant="contained"
-                    size="large"
+                    variant={navLevel === "unit" ? "contained" : "outlined"}
                     color="secondary"
-                    sx={{width: '20%'}}
-                    onClick={() => console.log("click")}
-                    endIcon={<CompareIcon/>}
+                    size="small"
+                    onClick={() => setNavLevel("unit")}
                 >
-                    Comparer
+                    <Typography variant="body2">
+                        {bookSections[sectionPointer[1]][1][sectionPointer[0]]["units"][sectionPointer[2]]["cv"]}
+                    </Typography>
                 </Button>
             </ButtonGroup>
             <Button
-                variant={navLevel === "section" ? "contained" : "outlined"}
-                color="secondary"
+                sx={{width: '30%'}}
                 size="small"
-                onClick={() => setNavLevel("section")}
+                disabled={!nextThing()}
+                onClick={() => setSectionPointer(nextThing())}
             >
-                <Typography variant="body2">
-                    {sectionsI18n["fr"][bookSections[sectionPointer[1]][0]]["title"]}
-                    {" ("}
-                    {bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
-                    {")"}
-                </Typography>
-            </Button>
-            <Button
-                variant={navLevel === "unit" ? "contained" : "outlined"}
-                color="secondary"
-                size="small"
-                onClick={() => setNavLevel("unit")}
-            >
-                <Typography variant="body2">
-                    {bookSections[sectionPointer[1]][1][sectionPointer[0]]["units"][sectionPointer[2]]["cv"]}
-                </Typography>
+                {
+                    (nextThing() && <Stack>{renderDestination(nextThing())}</Stack>) || "-"
+                }
             </Button>
         </ButtonGroup>
-        <Button
-            sx={{width: '30%'}}
-            size="small"
-            disabled={!nextThing()}
-            onClick={() => setSectionPointer(nextThing())}
+        <Dialog
+            fullScreen
+            open={parallelOpen}
+            onClose={() => setParallelOpen(false)}
         >
-            {
-                (nextThing() && <Stack>{renderDestination(nextThing())}</Stack>) || "-"
-            }
-        </Button>
-    </ButtonGroup>
+            <AppBar sx={{position: 'relative'}}>
+                <Toolbar>
+                    <IconButton
+                        edge="start"
+                        color="secondary"
+                        onClick={() => setParallelOpen(false)}
+                        aria-label="close"
+                    >
+                        <CloseIcon/>
+                    </IconButton>
+                    <Typography sx={{ml: 2, flex: 1}} variant="h6" component="div">
+                        ||
+                    </Typography>
+                </Toolbar>
+            </AppBar>
+            <Parallel
+                sections={sections}
+                sectionOrders={sectionOrders}
+                sectionsI18n={sectionsI18n}
+            />
+        </Dialog>
+    </>
 }
