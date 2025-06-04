@@ -12,23 +12,25 @@ const standardPaneChoices = {
 }
 
 function PaneContentPicker({sectionPointer, paneChoiceGetter, paneChoiceSetter, section, includeParallels}) {
-
+    console.log(section)
     const [fullPaneChoices, setFullPaneChoices] = useState(standardPaneChoices);
 
     useEffect(
         () => {
             let newFullPaneChoices = {...standardPaneChoices};
-            console.log("newChoices", newFullPaneChoices);
+            // console.log("standardChoices", newFullPaneChoices);
             if (includeParallels) {
-                for (const bookCode of Object.entries(section || {})
+                for (const bookRecord of (Object.entries(section || {}))
                     .filter(kv => (Object.entries(kv[1]).length > 0) && (kv[0] !== sectionPointer[0]))
-                    .map(kv => kv[0])) {
-                    newFullPaneChoices[bookCode] = `|| ${bookCode}`;
+                    ) {
+                    // console.log("   ", bookRecord);
+                    newFullPaneChoices[bookRecord[0]] = `|| ${bookRecord[0]}`;
                 }
+                // console.log("fullChoices", newFullPaneChoices);
                 setFullPaneChoices(newFullPaneChoices);
             }
         },
-        [sectionPointer, section.cvs]
+        [sectionPointer, section]
     );
     return <ButtonGroup>
         {
@@ -158,7 +160,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                 }
             )
     }
-    const bookSections = sectionsForBook(sectionPointer[0]);
+    const bookSectionEntries = sectionsForBook(sectionPointer[0]);
 
     useEffect(
         () => {
@@ -246,7 +248,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                     {
                         SNs[sectionPointer[0]] && <SNViewer
                             content={SNs[sectionPointer[0]]}
-                            cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                            cvs={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
                         />
                     }
                 </Stack>
@@ -256,7 +258,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                     <PaneContentPicker
                         paneChoiceGetter={paneChoices[0]}
                         paneChoiceSetter={nv => setPaneChoices([nv, paneChoices[1]])}
-                        section={sections[sectionOrders[sectionPointer[0]][sectionPointer[1]]]}
+                        section={bookSectionEntries[sectionPointer[1]][1]}
                         sectionPointer={sectionPointer}
                         includeParallels={false}
                     />
@@ -266,7 +268,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         <UsfmViewer
                             content={GLs[sectionPointer[0]]}
                             sectionPointer={sectionPointer}
-                            cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                            cvs={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
                         />
                     }
                     {
@@ -275,8 +277,8 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         <JuxtaGlossViewer
                             content={juxtas[sectionPointer[0]]}
                             sectionPointer={sectionPointer}
-                            firstSentence={bookSections[sectionPointer[1]][1][sectionPointer[0]]["firstSentence"]}
-                            lastSentence={bookSections[sectionPointer[1]][1][sectionPointer[0]]["lastSentence"]}
+                            firstSentence={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["firstSentence"]}
+                            lastSentence={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["lastSentence"]}
                         />
                     }
                     {
@@ -285,7 +287,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         <UsfmViewer
                             content={Sources[sectionPointer[0]]}
                             sectionPointer={sectionPointer}
-                            cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                            cvs={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
                         />
                     }
                 </Stack>
@@ -295,7 +297,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                     <PaneContentPicker
                         paneChoiceGetter={paneChoices[1]}
                         paneChoiceSetter={nv => setPaneChoices([paneChoices[0], nv])}
-                        section={sections[sectionOrders[sectionPointer[0]][sectionPointer[1]]]}
+                        section={bookSectionEntries[sectionPointer[1]][1]}
                         sectionPointer={sectionPointer}
                         includeParallels={true}
                     />
@@ -305,7 +307,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         <UsfmViewer
                             content={GLs[sectionPointer[0]]}
                             sectionPointer={sectionPointer}
-                            cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                            cvs={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
                         />
                     }
                     {
@@ -314,8 +316,8 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         <JuxtaGlossViewer
                             content={juxtas[sectionPointer[0]]}
                             sectionPointer={sectionPointer}
-                            firstSentence={bookSections[sectionPointer[1]][1][sectionPointer[0]]["firstSentence"]}
-                            lastSentence={bookSections[sectionPointer[1]][1][sectionPointer[0]]["lastSentence"]}
+                            firstSentence={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["firstSentence"]}
+                            lastSentence={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["lastSentence"]}
                         />
                     }
                     {
@@ -324,7 +326,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         <UsfmViewer
                             content={Sources[sectionPointer[0]]}
                             sectionPointer={sectionPointer}
-                            cvs={bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
+                            cvs={bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
                         />
                     }
                     {
@@ -333,10 +335,9 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                         <UsfmViewer
                             content={GLs[paneChoices[1]]}
                             sectionPointer={[paneChoices[1], ...sectionPointer.slice(1)]}
-                            cvs={bookSections[sectionPointer[1]][1][paneChoices[1]]["cvs"]}
+                            cvs={bookSectionEntries[sectionPointer[1]][1][paneChoices[1]]["cvs"]}
                         />
                     }
-
                 </Stack>
             </Grid2>
         </Grid2>
