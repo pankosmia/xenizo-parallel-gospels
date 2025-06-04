@@ -1,8 +1,17 @@
 import {Button, ButtonGroup, Stack, Typography} from "@mui/material";
-import {useState} from "react";
+import CompareIcon from "@mui/icons-material/Compare"
 
-
-export default function ContentNavigator({books, navLevel, setNavLevel, sections, sectionsI18n, sectionPointer, setSectionPointer}) {
+export default function ContentNavigator(
+    {
+        books,
+        navLevel,
+        setNavLevel,
+        sections,
+        sectionsI18n,
+        sectionPointer,
+        setSectionPointer
+    }
+) {
     const sectionsForBook = bookCode => {
         return Object.entries(sections)
             .filter(s => s[1][bookCode].cvs)
@@ -134,7 +143,8 @@ export default function ContentNavigator({books, navLevel, setNavLevel, sections
             if (destination[0] !== sectionPointer[0]) {
                 ret.push(<Typography variant="caption">{destination[0]}</Typography>);
             }
-            ret.push(<Typography variant="body2">{sectionsI18n["fr"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
+            ret.push(<Typography
+                variant="body2">{sectionsI18n["fr"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
             return ret;
         }
         let ret = [];
@@ -142,9 +152,11 @@ export default function ContentNavigator({books, navLevel, setNavLevel, sections
             ret.push(<Typography variant="caption">{destination[0]}</Typography>);
         }
         if (destination[1] !== sectionPointer[1]) {
-            ret.push(<Typography variant="caption">{sectionsI18n["fr"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
+            ret.push(<Typography
+                variant="caption">{sectionsI18n["fr"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
         }
-        ret.push(<Typography variant="body2">{destinationBookSections[destination[1]][1][destination[0]]["units"][destination[2]]["cv"]}</Typography>);
+        ret.push(<Typography
+            variant="body2">{destinationBookSections[destination[1]][1][destination[0]]["units"][destination[2]]["cv"]}</Typography>);
         return ret;
     }
 
@@ -160,14 +172,33 @@ export default function ContentNavigator({books, navLevel, setNavLevel, sections
             }
         </Button>
         <ButtonGroup orientation="vertical" sx={{width: '40%'}}>
-            <Button
-                variant={navLevel === "book" ? "contained" : "outlined"}
-                color="secondary"
-                size="small"
-                onClick={() => setNavLevel("book")}
-            >
-                <Typography variant="body2">{sectionPointer[0]}</Typography>
-            </Button>
+            <ButtonGroup>
+                <Button
+                    variant="contained"
+                    size="large"
+                    color="secondary"
+                    sx={{width: '20%'}}
+                />
+                <Button
+                    sx={{width: '60%'}}
+                    variant={navLevel === "book" ? "contained" : "outlined"}
+                    color="secondary"
+                    size="small"
+                    onClick={() => setNavLevel("book")}
+                >
+                    <Typography variant="body2">{sectionPointer[0]}</Typography>
+                </Button>
+                <Button
+                    variant="contained"
+                    size="large"
+                    color="secondary"
+                    sx={{width: '20%'}}
+                    onClick={() => console.log("click")}
+                    endIcon={<CompareIcon/>}
+                >
+                    Comparer
+                </Button>
+            </ButtonGroup>
             <Button
                 variant={navLevel === "section" ? "contained" : "outlined"}
                 color="secondary"

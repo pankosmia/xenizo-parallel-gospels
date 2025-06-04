@@ -1,4 +1,4 @@
-import {useCallback, useContext, useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import RequireResources from "./components/RequireResources";
 import {Box} from "@mui/material";
 import ContentViewer from "./components/ContentViewer";
