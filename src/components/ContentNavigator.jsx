@@ -181,14 +181,14 @@ export default function ContentNavigator(
             <ButtonGroup orientation="vertical" sx={{width: '40%'}}>
                 <ButtonGroup>
                     <Button
-                        variant="contained"
+                        variant={navLevel === "book" ? "contained" : "text"}
                         size="large"
                         color="secondary"
                         sx={{width: '20%'}}
                     />
                     <Button
                         sx={{width: '60%'}}
-                        variant={navLevel === "book" ? "contained" : "outlined"}
+                        variant={navLevel === "book" ? "contained" : "text"}
                         color="secondary"
                         size="small"
                         onClick={() => setNavLevel("book")}
@@ -196,7 +196,7 @@ export default function ContentNavigator(
                         <Typography variant="body2">{sectionPointer[0]}</Typography>
                     </Button>
                     <Button
-                        variant="contained"
+                        variant={navLevel === "book" ? "contained" : "text"}
                         size="large"
                         color="secondary"
                         sx={{width: '20%'}}
