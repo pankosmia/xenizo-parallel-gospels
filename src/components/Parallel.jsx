@@ -1,6 +1,8 @@
 import {useState, useEffect, useContext} from 'react';
 import {getJson, getAndSetJson, debugContext} from "pithekos-lib";
-import {Button, Grid2, Stack, Typography} from "@mui/material";
+import {Box, Button, ButtonGroup, Grid2, Stack, Typography} from "@mui/material";
+
+import JuxtaGlossViewer from "./JuxtaGlossViewer";
 
 export default function Parallel({sections, sectionsI18n, sectionOrders}) {
 
@@ -10,34 +12,66 @@ export default function Parallel({sections, sectionsI18n, sectionOrders}) {
         LUK: {},
         JHN: {}
     });
-    const [contentView, setContentView] = useState("gloss");
+    const [contentView, setContentView] = useState("gl");
     const [openSection, setOpenSection] = useState(null);
+
+    useEffect(
+        () => {
+            const getJuxtas = async bookCodes => {
+                const newJuxtas = {};
+                for (const bookCode of bookCodes) {
+                    const response = await getJson(
+                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_juxta/?ipath=${bookCode}.json`,
+                        debugRef.current
+                    );
+                    if (response.ok) {
+                        newJuxtas[bookCode] = response.json;
+                    } else {
+                        console.log(`Could not load juxta for ${bookCode}: ${response.error}`);
+                    }
+                }
+                setJuxtas(newJuxtas);
+            };
+            getJuxtas(["MAT", "MRK", "LUK", "JHN"]).then();
+        },
+        []
+    );
+
     const {debugRef} = useContext(debugContext);
+
+    const standardPaneChoices = {
+        "source": "Source",
+        "juxtaGl": "Gloss",
+        "gl": "Gateway"
+    }
 
     if (false) {
         return <div>Loading...</div>;
     } else {
         return <>
-            <Button
-                sx={{ml: 2, position: "absolute", top: "75px", right: "50px"}}
-                color="secondary"
-                size="large"
-                variant="contained"
-                aria-label={contentView}
-                onClick={
-                    () => {
-                        if (contentView === "gloss") {
-                            setContentView("source")
-                        } else if (contentView === "source") {
-                            setContentView("juxta")
-                        } else {
-                            setContentView("gloss")
-                        }
-                    }
-                }
+            <ButtonGroup
+                sx={{
+                    position: "fixed",
+                    top: 80,
+                    right: 20,
+                    backgroundColor: "#FFF"
+                }}
             >
-                {contentView}
-            </Button>
+                {
+                    Object.entries(standardPaneChoices)
+                        .map(
+                            pc => <Button
+                                size="small"
+                                color="secondary"
+                                variant={pc[0] === contentView ? "contained" : "outlined"}
+                                onClick={() => setContentView(pc[0])}
+
+                            >
+                                {pc[1]}
+                            </Button>
+                        )
+                }
+            </ButtonGroup>
             <Grid2 container style={{fontSize: "x-small"}}>
                 {
                     sectionOrders["MRK"]
@@ -50,7 +84,12 @@ export default function Parallel({sections, sectionsI18n, sectionOrders}) {
                                     display="flex"
                                     justifyContent="center"
                                     alignContent="center"
-                                    sx={{backgroundColor: "#777", color: "#FFF", mt: 1}}
+                                    sx={{
+                                        backgroundColor: "#777",
+                                        color: "#FFF",
+                                        borderTop: 1,
+                                        borderColor: 'secondary.main'
+                                    }}
                                     onClick={() => openSection === n ? setOpenSection(null) : setOpenSection(n)}
                                 >
                                     <Typography
@@ -59,35 +98,47 @@ export default function Parallel({sections, sectionsI18n, sectionOrders}) {
                                         sectionsI18n["fr"][sectionId]["title"]
                                     }</Typography>
                                 </Grid2>
-                                    {
-                                        openSection === n &&
-                                        ["MAT", "MRK", "LUK", "JHN"]
-                                            .map(
-                                                bookCode => <Grid2
-                                                    key={`${bookCode}-${n}`}
-                                                    size={3}
-                                                    spacing={1}
-                                                    item
-                                                    display="flex"
-                                                    flexDirection="row"
-                                                    alignContent="flex-start"
+                                {
+                                    openSection === n &&
+                                    ["MAT", "MRK", "LUK", "JHN"]
+                                        .map(
+                                            bookCode => <Grid2
+                                                key={`${bookCode}-${n}`}
+                                                size={3}
+                                                spacing={1}
+                                                item
+                                                display="flex"
+                                                flexDirection="row"
+                                                alignContent="flex-start"
+                                            >
+                                                <Grid2 item size={12} display="flex"
+                                                       justifyContent="center"
+                                                       alignContent="center"
+                                                       sx={{backgroundColor: "#DDD"}}
                                                 >
-                                                    <Grid2 item size={12} display="flex"
-                                                           justifyContent="center"
-                                                           alignContent="center"
-                                                           sx={{backgroundColor: "#DDD"}}
-                                                    >
-                                                        {
+                                                    {
+                                                        <Stack>
                                                             <Typography variant="h6">{
                                                                 sections[sectionId][bookCode]["cvs"] ?
                                                                     `${bookCode} ${sections[sectionId][bookCode]["cvs"]}` :
                                                                     "-"
                                                             }</Typography>
-                                                        }
-                                                    </Grid2>
+                                                            {
+                                                                contentView === "juxtaGl" && sections[sectionId][bookCode]["firstSentence"] &&
+                                                                <Box>
+                                                                    <JuxtaGlossViewer
+                                                                        content={juxtas[bookCode]}
+                                                                        firstSentence={sections[sectionId][bookCode]["firstSentence"]}
+                                                                        lastSentence={sections[sectionId][bookCode]["lastSentence"]}
+                                                                    />
+                                                                </Box>
+                                                            }
+                                                        </Stack>
+                                                    }
                                                 </Grid2>
-                                            )
-                                    }
+                                            </Grid2>
+                                        )
+                                }
                             </>
                         )
                 }
