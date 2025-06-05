@@ -120,6 +120,9 @@ export default function ContentViewer () {
             (navLevel === "unit") &&
             <UnitContent
                 sectionPointer={sectionPointer}
+                sections={sections}
+                sectionOrders={sectionOrders}
+                juxtas={juxtas}
             />
         }
     </Stack>
