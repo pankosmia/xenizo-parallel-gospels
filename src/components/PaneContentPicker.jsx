@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Button, ButtonGroup} from "@mui/material";
+import {ToggleButton, ToggleButtonGroup} from "@mui/material";
 
 const standardPaneChoices = {
     "source": "Source",
@@ -25,19 +25,18 @@ export default function PaneContentPicker({sectionPointer, paneChoiceGetter, pan
         },
         [sectionPointer, section]
     );
-    return <ButtonGroup>
+    return <ToggleButtonGroup value={paneChoiceGetter}>
         {
             Object.entries(fullPaneChoices)
                 .map(
-                    pc => <Button
+                    pc => <ToggleButton
                         size="small"
-                        color="secondary"
-                        variant={pc[0] === paneChoiceGetter ? "contained" : "outlined"}
+                        value={pc[0]}
                         onClick={() => paneChoiceSetter(pc[0])}
                     >
                         {pc[1]}
-                    </Button>
+                    </ToggleButton>
                 )
         }
-    </ButtonGroup>
+    </ToggleButtonGroup>
 }
