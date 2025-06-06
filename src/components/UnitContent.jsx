@@ -16,6 +16,7 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
     const [SQ, setSQ] = useState({});
     const [TQ, setTQ] = useState({});
     const [CN, setCN] = useState({});
+    const [TNC, setTNC] = useState({});
     const [AVX, setAVX] = useState({});
     const [selectedTexts, setSelectedTexts] = useState(["gl"]);
     const {debugRef} = useContext(debugContext);
@@ -231,6 +232,34 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
         []
     );
 
+    useEffect(
+        () => {
+            const getTNCs = async bookCodes => {
+                const newTNCs = {};
+                for (const bookCode of bookCodes) {
+                    const response = await getText(
+                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_tnc/?ipath=${bookCode}.tsv`,
+                        debugRef.current
+                    );
+                    if (response.ok) {
+                        newTNCs[bookCode] = response.text
+                            .split("\n")
+                            .map(
+                                r => r.split("\t")
+                                    .map(c => c.replace(/\\n/g, "\n"))
+                            );
+                        ;
+                    } else {
+                        console.log(`Could not load TNC for ${bookCode}: ${response.error}`);
+                    }
+                }
+                setTNC(newTNCs);
+            };
+            getTNCs(["MRK"]).then();
+        },
+        []
+    );
+
     if (!section || !unit) {
         return <p>Loading...</p>
     }
@@ -244,35 +273,53 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
 
     const noteSpecs = [
         {
+            "label": "Notes de traduction d'unfoldingWord avec catégories",
+            "categories": {
+                "M": ["source"],
+                "L": ["gl"],
+                "C": ["gl", "juxtaGl"],
+                "E": ["juxtaGL", "gl"],
+                "G": ["juxtaGL", "gl"],
+                "V": ["juxtaGL", "gl"],
+            },
+            "type": "notes",
+            "content": TNC
+        },
+        {
             "label": "Notes critiques",
             "for": ["source"],
+            "type": "notes",
             "content": CN
+        },
+        {
+            "label": "Verbes",
+            "for": ["source", "juxta"],
+            "type": "notes",
+            "content": AVX
+        },
+        {
+            "label": "uW Questions FR",
+            "for": ["juxtaGl", "gl"],
+            "type": "questions",
+            "content": TQ
+        },
+        {
+            "label": "Questions Worldview FR",
+            "for": ["gl"],
+            "type": "questions",
+            "content": SQ
         },
         {
             "label": "Tyndale FR",
             "for": ["gl"],
+            "type": "notes",
             "content": TSN
-        },
-        {
-            "label": "Questions Worldview FR",
-            "for": ["juxtaGl", "gl"],
-            "content": SQ
-        },
-        {
-            "label": "uW Questions FR",
-            "for": ["gl"],
-            "content": TQ
         },
         /*{
             "label": "uW tW FR",
             "for": ["juxtaGl", "gl"],
             "content": TW
         },*/
-        {
-            "label": "Verbes",
-            "for": ["source", "juxta"],
-            "content": AVX
-        }
     ];
 
     return <RequireResources
@@ -284,6 +331,7 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
             ["Analyse Verbal Xenizo (AVX)", "git.door43.org/BurritoTruck/fr_vp"],
             ["Questions d'étude de Worldview (SQ)", "git.door43.org/BurritoTruck/fr_sq"],
             ["unfoldingWord translationQuestions (TQ)", "git.door43.org/uW/en_tq"],
+            ["Notes de traduction d'unfoldingWord avec catégories (TNCFR)", "git.door43.org/BurritoTruck/fr_tnc"]
         ]}>
         <Grid2 container spacing={2}>
             <Grid2 item size={12}>
@@ -364,7 +412,7 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
                 {
                     noteSpecs.filter(
                         ns => selectedTexts
-                                .filter(t => ns.for.includes(t))
+                                .filter(t => ns.categories || ns.for.includes(t))
                                 .length
                             > 0
                     )
@@ -373,6 +421,7 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
                                 spec={ns}
                                 bookCode={sectionPointer[0]}
                                 cv={unit.cv}
+                                selectedTexts={selectedTexts}
                             />
                         )
                 }

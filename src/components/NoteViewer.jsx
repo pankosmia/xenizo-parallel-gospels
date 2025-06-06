@@ -4,7 +4,7 @@ import Markdown from "react-markdown";
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 
-export default function NoteViewer({spec, bookCode, cv}) {
+export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
     const [open, setOpen] = useState(false);
     const cvInRange = (cv, range) => {
         const [cvC, cvV] = cv.split(":");
@@ -30,9 +30,38 @@ export default function NoteViewer({spec, bookCode, cv}) {
         return "";
     }
 
+    const noteCategories = {
+        "M": "Manuscrits",
+        "L": "Dans votre langue...",
+        "C": "Infos culturelles",
+        "E": "Expliciter",
+        "G": "Grammaire",
+        "V": "Vocabulaire"
+    }
+
     const verseNotes = spec.content[bookCode]
         .filter(l => cvInRange(cv, l[0]))
-        .map(l => l[5] + "\n\n" + l[6]);
+        .filter(
+            l => !spec.categories || (
+                l[2] &&
+                l[2].split(":")[1] &&
+                spec.categories[l[2].split(":")[1]] &&
+                selectedTexts
+                    .filter(
+                        t => spec.categories[l[2].split(":")[1]].includes(t)
+                    )
+                    .length > 0
+            )
+        )
+        .map(l => spec.type === "questions" ?
+            l[5] + "\n\n" + l[6] :
+            spec.categories ?
+                `### ${noteCategories[l[2].split(':')[1]]}\n\n${l[6] || l[5]}` :
+                l[6] || l[5]
+        );
+
+    //  &&
+    //                 selectedTexts.includes(spec.categories[l[2].split(":")[1]]
 
     if (verseNotes.length === 0) {
         return "";
