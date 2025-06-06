@@ -167,7 +167,7 @@ export default function ContentNavigator(
 
     const [parallelOpen, setParallelOpen] = useState(false);
     return <>
-        <ButtonGroup sx={{width: '100%'}}>
+        <ButtonGroup sx={{width: '100%', border: 1, borderColor: "secondary.main"}}>
             <Button
                 sx={{width: '30%'}}
                 size="small"
@@ -178,7 +178,7 @@ export default function ContentNavigator(
                     (previousThing() && <Stack>{renderDestination(previousThing())}</Stack>) || "-"
                 }
             </Button>
-            <ButtonGroup orientation="vertical" sx={{width: '40%'}}>
+            <ButtonGroup orientation="vertical" sx={{width: '40%', border: 1, borderColor: "secondary.main"}}>
                 <ButtonGroup>
                     <Button
                         variant={navLevel === "book" ? "contained" : "text"}

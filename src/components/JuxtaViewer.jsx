@@ -13,11 +13,11 @@ export default function JuxtaViewer({content, firstSentence, lastSentence}) {
                                 .map(
                                     c => <>
                                         <Grid2 item size={6} spacing={0} sx={{p:0, m:0}} justifyContent="flex-end">
-                                            <Box display="flex" justifyContent="flex-end" alignContent="flex-end" alignItems="flex-end" sx={{fontSize: "medium", pr: 2}}>
+                                            <Box display="flex" justifyContent="flex-end" alignContent="flex-end" alignItems="flex-end" sx={{fontSize: "small", pr: 2}}>
                                                 {c.source.map(s => s.content).join(" ")}
                                             </Box>
                                         </Grid2>
-                                        <Grid2 item size={6} sx={{fontSize: "medium", p:0, m:0}} spacing={0}>
+                                        <Grid2 item size={6} sx={{fontSize: "small", p:0, m:0}} spacing={0}>
                                             {c.gloss}
                                         </Grid2>
                                     </>
