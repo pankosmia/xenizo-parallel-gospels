@@ -18,6 +18,8 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
     const [CN, setCN] = useState({});
     const [TNC, setTNC] = useState({});
     const [AVX, setAVX] = useState({});
+    const [TW, setTW] = useState({});
+    const [TWS, setTWS] = useState({});
     const [selectedTexts, setSelectedTexts] = useState(["gl"]);
     const {debugRef} = useContext(debugContext);
 
@@ -259,6 +261,61 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
         },
         []
     );
+    useEffect(
+        () => {
+            const getTWs = async bookCodes => {
+                const newTWs = {};
+                for (const bookCode of bookCodes) {
+                    const response = await getText(
+                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_tw/?ipath=${bookCode}.tsv`,
+                        debugRef.current
+                    );
+                    if (response.ok) {
+                        newTWs[bookCode] = response.text
+                            .split("\n")
+                            .map(
+                                r => r.split("\t")
+                                    .map(c => c.replace(/\\n/g, "\n"))
+                            );
+                        ;
+                    } else {
+                        console.log(`Could not load TW for ${bookCode}: ${response.error}`);
+                    }
+                }
+                setTW(newTWs);
+            };
+            getTWs(["MRK"]).then();
+        },
+        []
+    );
+
+    useEffect(
+        () => {
+            const getTWSs = async bookCodes => {
+                const newTWSs = {};
+                for (const bookCode of bookCodes) {
+                    const response = await getText(
+                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_tws/?ipath=${bookCode}.tsv`,
+                        debugRef.current
+                    );
+                    if (response.ok) {
+                        newTWSs[bookCode] = response.text
+                            .split("\n")
+                            .map(
+                                r => r.split("\t")
+                                    .map(c => c.replace(/\\n/g, "\n"))
+                            );
+                        ;
+                    } else {
+                        console.log(`Could not load TWS for ${bookCode}: ${response.error}`);
+                    }
+                }
+                setTWS(newTWSs);
+            };
+            getTWSs(["MRK"]).then();
+        },
+        []
+    );
 
     if (!section || !unit) {
         return <p>Loading...</p>
@@ -315,11 +372,12 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
             "type": "notes",
             "content": TSN
         },
-        /*{
-            "label": "uW tW FR",
+        {
+            "label": "Termes d'unfoldingWord",
             "for": ["juxtaGl", "gl"],
-            "content": TW
-        },*/
+            "content": TW,
+            "secondaryContent": TWS
+        }
     ];
 
     return <RequireResources
@@ -331,7 +389,9 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
             ["Analyse Verbal Xenizo (AVX)", "git.door43.org/BurritoTruck/fr_vp"],
             ["Questions d'étude de Worldview (SQ)", "git.door43.org/BurritoTruck/fr_sq"],
             ["unfoldingWord translationQuestions (TQ)", "git.door43.org/uW/en_tq"],
-            ["Notes de traduction d'unfoldingWord avec catégories (TNCFR)", "git.door43.org/BurritoTruck/fr_tnc"]
+            ["Notes de traduction d'unfoldingWord avec catégories (TNCFR)", "git.door43.org/BurritoTruck/fr_tnc"],
+            ["Termes de traduction d'unfoldingWord (TWFR)", "git.door43.org/BurritoTruck/fr_tw"],
+            ["Résumés de Termes de traduction d'unfoldingWord (TWSFR)", "git.door43.org/BurritoTruck/fr_tws"]
         ]}>
         <Grid2 container spacing={2}>
             <Grid2 item size={12}>

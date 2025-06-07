@@ -4,9 +4,11 @@ import Markdown from "react-markdown";
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import CategoryNotesViewer from "./CategoryNotesViewer";
+import TwoPartNotes from "./TwoPartNotes";
 
 export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
     const [open, setOpen] = useState(false);
+    const [showSecondary, setShowSecondary] = useState(true);
     const cvInRange = (cv, range) => {
         const [cvC, cvV] = cv.split(":");
         const [rangeC, rangeV] = range.split(":");
@@ -65,6 +67,16 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
     if (verseNotes.length === 0) {
         return "";
     }
+    if (spec.secondaryContent) {
+        spec.secondaryContent[bookCode]
+            .filter(l => cvInRange(cv, l[0]))
+            .map(l => [
+                    "*",
+                    l[6] || l[5]
+                ]
+            );
+    }
+    // Categories - use specific component
     if (spec.categories) {
         let notesByCategory = {};
         for (const verseNoteTuple of verseNotes) {
@@ -87,6 +99,37 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
                 )
         }</>
     }
+    // Two-part: use specific component
+    if (spec.secondaryContent) {
+        return <Box>
+            <Button
+                color="secondary"
+                size="small"
+                variant="outlined"
+                onClick={() => setOpen(!open)}
+                endIcon={open ? <ExpandLess/> : <ExpandMore/>}
+            >
+                {`${spec.label} (${verseNotes.length})`}
+            </Button>
+            {
+                open && <Stack>{
+                    spec.secondaryContent[bookCode]
+                        .filter(l => cvInRange(cv, l[0]))
+                        .map(l => l[6] || l[5]
+                        ).map(
+                        (
+                            (nt, n) => <TwoPartNotes
+                                shortNote={nt}
+                                longNote={verseNotes[n][1]}
+                            />
+                        )
+                    )
+                }</Stack>
+            }
+        </Box>
+    }
+
+    // Default button
     return <Box>
         <Button
             color="secondary"
@@ -105,7 +148,6 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
                     </Markdown>
                 )
             }</Stack>
-
         }
     </Box>
 }
