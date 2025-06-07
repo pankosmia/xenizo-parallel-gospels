@@ -3,6 +3,7 @@ import {Box, Button, Stack} from "@mui/material";
 import Markdown from "react-markdown";
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import CategoryNotesViewer from "./CategoryNotesViewer";
 
 export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
     const [open, setOpen] = useState(false);
@@ -53,18 +54,38 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
                     .length > 0
             )
         )
-        .map(l => spec.type === "questions" ?
-            l[5] + "\n\n" + l[6] :
-            spec.categories ?
-                `### ${noteCategories[l[2].split(':')[1]]}\n\n${l[6] || l[5]}` :
-                l[6] || l[5]
+        .map(l => [
+                spec.categories ? l[2].split(':')[1] : "*",
+                spec.type === "questions" ?
+                    l[5] + "\n\n" + l[6] :
+                    l[6] || l[5]
+            ]
         );
-
-    //  &&
-    //                 selectedTexts.includes(spec.categories[l[2].split(":")[1]]
 
     if (verseNotes.length === 0) {
         return "";
+    }
+    if (spec.categories) {
+        let notesByCategory = {};
+        for (const verseNoteTuple of verseNotes) {
+            if (!notesByCategory[verseNoteTuple[0]]) {
+                notesByCategory[verseNoteTuple[0]] = [];
+            }
+            notesByCategory[verseNoteTuple[0]].push(verseNoteTuple[1]);
+        }
+        return <>{
+            Object.entries(notesByCategory)
+                .sort(
+                    (a, b) => noteCategories[a[0]] > noteCategories[b[0]]
+                )
+                .map(
+                    kv => <CategoryNotesViewer
+                        spec={spec}
+                        categoryLabel={noteCategories[kv[0]]}
+                        notes={kv[1]}
+                    />
+                )
+        }</>
     }
     return <Box>
         <Button
@@ -80,7 +101,7 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
             open && <Stack>{
                 verseNotes.map(
                     vn => <Markdown sx={{fontSize: "small"}}>
-                        {vn}
+                        {vn[1]}
                     </Markdown>
                 )
             }</Stack>

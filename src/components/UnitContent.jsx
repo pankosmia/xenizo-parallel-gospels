@@ -273,7 +273,7 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
 
     const noteSpecs = [
         {
-            "label": "Notes de traduction d'unfoldingWord avec catégories",
+            "label": "Notes d'unfoldingWord",
             "categories": {
                 "M": ["source"],
                 "L": ["gl"],
