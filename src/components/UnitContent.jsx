@@ -4,7 +4,6 @@ import {getText, debugContext} from "pithekos-lib";
 import UsfmViewer from "./UsfmViewer";
 import JuxtaGlossViewer from "./JuxtaGlossViewer";
 import JuxtaViewer from "./JuxtaViewer";
-import RequireResources from "./RequireResources";
 import NoteViewer from "./NoteViewer";
 
 export default function UnitContent({sectionPointer, sectionOrders, sections, juxtas}) {
@@ -380,20 +379,7 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
         }
     ];
 
-    return <RequireResources
-        required={[
-            ["unfoldingWord UGNT", "git.door43.org/uW/grc_ugnt"],
-            ["Pain sur les eaux (PSLE)", "git.door43.org/BurritoTruck/fr_psle"],
-            ["Notes d'étude Tyndale en français (TSNFR)", "git.door43.org/BurritoTruck/fr_tsn"],
-            ["Notes critiques (NCX)", "git.door43.org/BurritoTruck/fr_cn"],
-            ["Analyse Verbal Xenizo (AVX)", "git.door43.org/BurritoTruck/fr_vp"],
-            ["Questions d'étude de Worldview (SQ)", "git.door43.org/BurritoTruck/fr_sq"],
-            ["unfoldingWord translationQuestions (TQ)", "git.door43.org/uW/en_tq"],
-            ["Notes de traduction d'unfoldingWord avec catégories (TNCFR)", "git.door43.org/BurritoTruck/fr_tnc"],
-            ["Termes de traduction d'unfoldingWord (TWFR)", "git.door43.org/BurritoTruck/fr_tw"],
-            ["Résumés de Termes de traduction d'unfoldingWord (TWSFR)", "git.door43.org/BurritoTruck/fr_tws"]
-        ]}>
-        <Grid2 container spacing={2}>
+    return <Grid2 container spacing={2}>
             <Grid2 item size={12}>
                 <Typography variant="h5">{`${sectionPointer[0]} ${unit.cv}`}</Typography>
             </Grid2>
@@ -487,5 +473,4 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
                 }
             </Grid2>
         </Grid2>
-    </RequireResources>
 }

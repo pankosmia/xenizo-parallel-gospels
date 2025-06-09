@@ -6,7 +6,6 @@ import PaneContentPicker from "./PaneContentPicker";
 import SNViewer from "./SNViewer";
 import JuxtaGlossViewer from "./JuxtaGlossViewer";
 import UsfmViewer from "./UsfmViewer";
-import RequireResources from "./RequireResources";
 
 export default function SectionContent({sectionPointer, sections, sectionsI18n, sectionOrders, juxtas}) {
     const {debugRef} = useContext(debugContext);
@@ -108,14 +107,7 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
         return <p>Loading...</p>
     }
 
-    return <RequireResources
-        required={[
-            ["unfoldingWord Greek New Testament (UGNT)", "git.door43.org/uW/grc_ugnt"],
-            ["Pain sur les eaux (PSLE)", "git.door43.org/BurritoTruck/fr_psle"],
-            ["Notes de Section de Xenizo (NSX)", "git.door43.org/BurritoTruck/fr_sn"]
-        ]}
-    >
-        <Grid2 container sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", mt: 2, borderRadius: 1}}>
+    return <Grid2 container sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", mt: 2, borderRadius: 1}}>
             <Grid2 item size={12}>
                 <Stack sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", p: 2, borderRadius: 1}}>
                     {
@@ -214,6 +206,4 @@ export default function SectionContent({sectionPointer, sections, sectionsI18n, 
                 </Stack>
             </Grid2>
         </Grid2>
-    </RequireResources>
-
 }

@@ -1,6 +1,5 @@
 import {useState, useEffect} from 'react';
 import Markdown from "react-markdown";
-import RequireResources from "./RequireResources";
 import {getText} from "pithekos-lib";
 
 export default function BookContent({sectionPointer}) {
@@ -24,11 +23,5 @@ export default function BookContent({sectionPointer}) {
 []
 );
 
-    return <RequireResources
-        required={[
-            ["Introductions de Livre Xenizo (ILX)", "git.door43.org/BurritoTruck/fr_xenizo_book-notes",],
-        ]}
-    >
-        {intros[sectionPointer[0]] && <Markdown>{intros[sectionPointer[0]]}</Markdown>}
-    </RequireResources>
+    return intros[sectionPointer[0]] ? <Markdown>{intros[sectionPointer[0]]}</Markdown> : <p>Loading...</p>
 }

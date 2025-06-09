@@ -1,0 +1,240 @@
+{
+  "general": {
+    "xpg": {
+      "fr": {
+        "dcs": {
+          "name": "Xenizo Parallel Gospels (XPG)",
+          "repoPath": "git.door43.org/BurritoTruck/en_syn",
+          "resources": {
+            "ordersMRK": "sectionOrders/MRK.json",
+            "i18nEN": "i18n/en.json",
+            "i18nFR": "i18n/fr.json"
+          }
+        }
+      }
+    },
+    "juxta": {
+      "fr": {
+        "dcs": {
+          "name": "New testament Juxtalinear(NTJXT)",
+          "repoPath": "git.door43.org/BurritoTruck/fr_juxta",
+          "resources": {
+            "MAT": "MAT.json",
+            "MRK": "MRK.json",
+            "LUK": "LUK.json",
+            "JHN": "JHN.json"
+          }
+        }
+      }
+    },
+    "bookIntros": {
+      "fr": {
+        "dcs": {
+          "name": "Introductions de Livre Xenizo (ILX)",
+          "repoPath": "git.door43.org/BurritoTruck/fr_xenizo_book-notes",
+          "resources": {
+            "MAT": "MAT.md",
+            "MRK": "MRK.md",
+            "LUK": "LUK.md",
+            "JHN": "JHN.md"
+          }
+        }
+      }
+    },
+    "greekNT": {
+      "fr": {
+        "dcs": {
+          "name": "unfoldingWord Greek New Testament (UGNT)",
+          "repoPath": "git.door43.org/uW/grc_ugnt",
+          "resources": {
+            "MAT": "MAT.usfm",
+            "MRK": "MRK.usfm",
+            "LUK": "LUK.usfm",
+            "JHN": "JHN.usfm"
+          }
+        },
+        "succinctify": true
+      }
+    },
+    "gl": {
+      "fr": {
+        "dcs": {
+          "name": "Pain sur les eaux (PSLE)",
+          "repoPath": "git.door43.org/BurritoTruck/fr_psle",
+          "resources": {
+            "MAT": "MAT.usfm",
+            "MRK": "MRK.usfm",
+            "LUK": "LUK.usfm",
+            "JHN": "JHN.usfm"
+          }
+        },
+        "succinctify": true
+      }
+    },
+    "sectionNotes": {
+      "fr": {
+        "dcs": {
+          "name": "Notes de Section de Xenizo (NSX)",
+          "repoPath": "git.door43.org/BurritoTruck/fr_sn",
+          "resources": {
+            "MAT": "MAT.tsv",
+            "MRK": "MRK.tsv",
+            "LUK": "LUK.tsv",
+            "JHN": "JHN.tsv"
+          }
+        }
+      }
+    }
+  },
+  "unitNotes": [
+    {
+      "id": "tNcFr",
+      "lang": "fr",
+      "dcs": {
+        "name": "Notes de traduction d'unfoldingWord avec catégories (TNCFR)",
+        "repoPath": "git.door43.org/BurritoTruck/fr_tnc",
+        "resources": {
+          "MRK": "MRK.tsv"
+        }
+      },
+      "appLabel": "Notes d'unfoldingWord",
+      "categories": {
+        "M": [
+          "source"
+        ],
+        "L": [
+          "gl"
+        ],
+        "C": [
+          "gl",
+          "juxtaGl"
+        ],
+        "E": [
+          "juxtaGL",
+          "gl"
+        ],
+        "G": [
+          "juxtaGL",
+          "gl"
+        ],
+        "V": [
+          "juxtaGL",
+          "gl"
+        ]
+      },
+      "type": "notes"
+    },
+    {
+      "id": "CnFr",
+      "lang": "fr",
+      "dcs": {
+        "name": "Notes critiques (NCX)",
+        "repoPath": "git.door43.org/BurritoTruck/fr_cn",
+        "resources": {
+          "MRK": "MRK.tsv"
+        }
+      },
+      "appLabel": "Notes critiques",
+      "for": [
+        "source"
+      ],
+      "type": "notes"
+    },
+    {
+      "id": "AVX",
+      "lang": "fr",
+      "dcs": {
+        "name": "Analyse Verbal Xenizo (AVX)",
+        "repoPath": "git.door43.org/BurritoTruck/fr_vp",
+        "resources": {
+          "MRK": "MRK.tsv"
+        }
+      },
+      "appLabel": "Verbes",
+      "for": [
+        "source",
+        "juxta"
+      ],
+      "type": "notes"
+    },
+    {
+      "id": "tQEn",
+      "lang": "en",
+      "dcs": {
+        "name": "unfoldingWord translationQuestions (TQ)",
+        "repoPath": "git.door43.org/uW/en_tq",
+        "resources": {
+          "MAT": "MAT.tsv",
+          "MRK": "MRK.tsv",
+          "LUK": "LUK.tsv",
+          "JHN": "JHN.tsv"
+        }
+      },
+      "appLabel": "uW Questions EN",
+      "for": [
+        "juxtaGl",
+        "gl"
+      ],
+      "type": "questions"
+    },
+    {
+      "id": "sQFr",
+      "lang": "fr",
+      "dcs": {
+        "name": "Questions d'étude de Worldview (SQ)",
+        "repoPath": "git.door43.org/BurritoTruck/fr_sq",
+        "resources": {
+          "MRK": "MRK.tsv",
+          "LUK": "LUK.tsv"
+        }
+      },
+      "appLabel": "Worldview Questions FR",
+      "for": [
+        "gl"
+      ],
+      "type": "questions"
+    },
+    {
+      "id": "TsnFr",
+      "lang": "fr",
+      "dcs": {
+        "name": "Notes d'étude Tyndale en français (TSNFR)",
+        "repoPath": "git.door43.org/BurritoTruck/fr_tsn",
+        "resources": {
+          "MAT": "MAT.tsv",
+          "MRK": "MRK.tsv",
+          "LUK": "LUK.tsv",
+          "JHN": "JHN.tsv"
+        }
+      },
+      "appLabel": "Tyndale FR",
+      "for": [
+        "gl"
+      ],
+      "type": "notes"
+    },
+    {
+      "id": "tWFr",
+      "lang": "fr",
+      "dcs": {
+        "name": "Termes de traduction d'unfoldingWord (TWFR)",
+        "repoPath": "git.door43.org/BurritoTruck/fr_tw",
+        "resources": {
+          "MRK": "MRK.tsv"
+        }
+      },
+      "appLabel": "Termes d'unfoldingWord",
+      "for": [
+        "juxtaGl",
+        "gl"
+      ],
+      "secondaryContent": {
+        "id": "tWSFr",
+        "dcs": {
+          "name": "Résumés de Termes de traduction d'unfoldingWord (TWSFR)",
+          "repoPath": "git.door43.org/BurritoTruck/fr_tws"
+        }
+      }
+    }
+  ]
+}
