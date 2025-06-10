@@ -29,10 +29,6 @@ export default function SectionContent({sectionPointer, content}) {
     }
     const bookSectionEntries = sectionsForBook(sectionPointer[0]);
 
-    if (!content["xpg"]["sections"] || !content["xpg"]["orders" + sectionPointer[0]]) {
-        return <p>Loading...</p>
-    }
-
     return <Grid2 container sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", mt: 2, borderRadius: 1}}>
             <Grid2 item size={12}>
                 <Stack sx={{border: 1, borderColor: "secondary.main", borderWidth: "1px", p: 2, borderRadius: 1}}>
