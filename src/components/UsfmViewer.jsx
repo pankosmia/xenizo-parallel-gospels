@@ -6,7 +6,7 @@ export default function UsfmViewer({content, sectionPointer, cvs}) {
         return <p>Loading...</p>;
     }
     const pk = new Proskomma();
-    pk.importDocument({lang: "xxx", abbr: "yyy"}, "usfm", content);
+    pk.loadSuccinctDocSet(content);
     const query = `{
         docSet(id: "xxx_yyy") {
             document(bookCode: "${sectionPointer[0]}") {

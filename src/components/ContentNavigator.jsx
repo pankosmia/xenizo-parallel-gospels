@@ -10,15 +10,13 @@ export default function ContentNavigator(
         books,
         navLevel,
         setNavLevel,
-        sections,
-        sectionOrders,
-        sectionsI18n,
         sectionPointer,
-        setSectionPointer
+        setSectionPointer,
+        content
     }
 ) {
     const sectionsForBook = bookCode => {
-        return Object.entries(sections)
+        return Object.entries(content["xpg"]["sections"])
             .filter(s => s[1][bookCode].cvs)
             .sort(
                 (a, b) => {
@@ -149,7 +147,7 @@ export default function ContentNavigator(
                 ret.push(<Typography variant="caption">{destination[0]}</Typography>);
             }
             ret.push(<Typography
-                variant="body2">{sectionsI18n["fr"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
+                variant="body2">{content["xpg"]["i18nFR"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
             return ret;
         }
         let ret = [];
@@ -158,7 +156,7 @@ export default function ContentNavigator(
         }
         if (destination[1] !== sectionPointer[1]) {
             ret.push(<Typography
-                variant="caption">{sectionsI18n["fr"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
+                variant="caption">{content["xpg"]["i18nFR"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
         }
         ret.push(<Typography
             variant="body2">{destinationBookSections[destination[1]][1][destination[0]]["units"][destination[2]]["cv"]}</Typography>);
@@ -213,7 +211,7 @@ export default function ContentNavigator(
                     onClick={() => setNavLevel("section")}
                 >
                     <Typography variant="body2">
-                        {sectionsI18n["fr"][bookSections[sectionPointer[1]][0]]["title"]}
+                        {content["xpg"]["i18nFR"][bookSections[sectionPointer[1]][0]]["title"]}
                         {" ("}
                         {bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
                         {")"}
@@ -262,9 +260,7 @@ export default function ContentNavigator(
                 </Toolbar>
             </AppBar>
             <Parallel
-                sections={sections}
-                sectionOrders={sectionOrders}
-                sectionsI18n={sectionsI18n}
+                content={content}
             />
         </Dialog>
     </>

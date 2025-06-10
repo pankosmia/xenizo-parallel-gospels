@@ -8,7 +8,8 @@
           "resources": {
             "ordersMRK": "sectionOrders/MRK.json",
             "i18nEN": "i18n/en.json",
-            "i18nFR": "i18n/fr.json"
+            "i18nFR": "i18n/fr.json",
+            "sections": "sections.json"
           }
         }
       }

@@ -132,7 +132,7 @@ export default function App() {
                 ["Résumés de Termes de traduction d'unfoldingWord (TWSFR)", "git.door43.org/BurritoTruck/fr_tws"]
             ]}
         >
-            <ContentViewer/>
+            <ContentViewer content={content}/>
         </RequireResources>
     </Box>;
 }

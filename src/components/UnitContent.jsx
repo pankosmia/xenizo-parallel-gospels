@@ -6,317 +6,16 @@ import JuxtaGlossViewer from "./JuxtaGlossViewer";
 import JuxtaViewer from "./JuxtaViewer";
 import NoteViewer from "./NoteViewer";
 
-export default function UnitContent({sectionPointer, sectionOrders, sections, juxtas}) {
-    const [section, setSection] = useState(null);
+const contentSpec = require("../contentSpec.json");
+
+export default function UnitContent({sectionPointer, content}) {
     const [unit, setUnit] = useState(null);
-    const [GLs, setGLs] = useState({});
-    const [Sources, setSources] = useState({});
-    const [TSN, setTSN] = useState({});
-    const [SQ, setSQ] = useState({});
-    const [TQ, setTQ] = useState({});
-    const [CN, setCN] = useState({});
-    const [TNC, setTNC] = useState({});
-    const [AVX, setAVX] = useState({});
-    const [TW, setTW] = useState({});
-    const [TWS, setTWS] = useState({});
     const [selectedTexts, setSelectedTexts] = useState(["gl"]);
-    const {debugRef} = useContext(debugContext);
 
-    useEffect(
-        () => {
-            const sectionsForBook = bookCode => {
-                return Object.entries(sections)
-                    .filter(s => s[1][bookCode].cvs)
-                    .sort(
-                        (a, b) => {
-                            const cvA = a[1][bookCode].cvs;
-                            const cA = parseInt(cvA.split(":")[0]);
-                            const cvB = b[1][bookCode].cvs;
-                            const cB = parseInt(cvB.split(":")[0]);
-                            if (cA !== cB) {
-                                return cA - cB;
-                            }
-                            const vA = parseInt(cvA.split(":")[1].split("-")[0]);
-                            const vB = parseInt(cvB.split(":")[1].split("-")[0]);
-                            return vA - vB;
-                        }
-                    )
-            };
-            if (sections) {
-                const newSection = sectionsForBook(sectionPointer[0])[sectionPointer[1]][1];
-                setSection(newSection);
-                setUnit(newSection[sectionPointer[0]].units[sectionPointer[2]]);
-            }
-        }
-    );
+    setUnit(content["xpg"]["sections"][sectionPointer[0]].units[sectionPointer[2]]);
 
-    useEffect(
-        () => {
-            const getGLs = async bookCodes => {
-                const newGLs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_psle/?ipath=${bookCode}.usfm`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newGLs[bookCode] = response.text;
-                    } else {
-                        console.log(`Could not load GL text for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setGLs(newGLs);
-            };
-            getGLs(["MAT", "MRK", "LUK", "JHN"]).then();
-        },
-        []
-    );
 
-    useEffect(
-        () => {
-            const getSources = async bookCodes => {
-                const newSources = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/uW/grc_ugnt/?ipath=${bookCode}.usfm`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newSources[bookCode] = response.text;
-                    } else {
-                        console.log(`Could not load source text for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setSources(newSources);
-            };
-            getSources(["MAT", "MRK", "LUK", "JHN"]).then();
-        },
-        []
-    );
-
-    useEffect(
-        () => {
-            const getTSNs = async bookCodes => {
-                const newTSNs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_tsn/?ipath=${bookCode}.tsv`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newTSNs[bookCode] = response.text
-                            .split("\n")
-                            .map(
-                                r => r.split("\t")
-                                    .map(c => c.replace(/\\n/g, "\n"))
-                            );
-                    } else {
-                        console.log(`Could not load TSN for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setTSN(newTSNs);
-            };
-            getTSNs(["MAT", "MRK", "LUK", "JHN"]).then();
-        },
-        []
-    );
-
-    useEffect(
-        () => {
-            const getCNs = async bookCodes => {
-                const newCNs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_cn/?ipath=${bookCode}.tsv`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newCNs[bookCode] = response.text
-                            .split("\n")
-                            .map(
-                                r => r.split("\t")
-                                    .map(c => c.replace(/\\n/g, "\n"))
-                            );
-                        ;
-                    } else {
-                        console.log(`Could not load CN for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setCN(newCNs);
-            };
-            getCNs(["MRK"]).then();
-        },
-        []
-    );
-
-    useEffect(
-        () => {
-            const getAVXs = async bookCodes => {
-                const newAVXs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_vp/?ipath=${bookCode}.tsv`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newAVXs[bookCode] = response.text
-                            .split("\n")
-                            .map(
-                                r => r.split("\t")
-                                    .map(c => c.replace(/\\n/g, "\n"))
-                            );
-                        ;
-                    } else {
-                        console.log(`Could not load AVX for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setAVX(newAVXs);
-            };
-            getAVXs(["MRK"]).then();
-        },
-        []
-    );
-
-    useEffect(
-        () => {
-            const getSQs = async bookCodes => {
-                const newSQs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_sq/?ipath=${bookCode}.tsv`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newSQs[bookCode] = response.text
-                            .split("\n")
-                            .map(
-                                r => r.split("\t")
-                                    .map(c => c.replace(/\\n/g, "\n"))
-                            );
-                        ;
-                    } else {
-                        console.log(`Could not load SQ for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setSQ(newSQs);
-            };
-            getSQs(["MAT", "MRK", "LUK"]).then();
-        },
-        []
-    );
-
-    useEffect(
-        () => {
-            const getTQs = async bookCodes => {
-                const newTQs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/uW/en_tq/?ipath=${bookCode}.tsv`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newTQs[bookCode] = response.text
-                            .split("\n")
-                            .map(
-                                r => r.split("\t")
-                                    .map(c => c.replace(/\\n/g, "\n"))
-                            );
-                        ;
-                    } else {
-                        console.log(`Could not load TQ for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setTQ(newTQs);
-            };
-            getTQs(["MAT", "MRK", "LUK", "JHN"]).then();
-        },
-        []
-    );
-
-    useEffect(
-        () => {
-            const getTNCs = async bookCodes => {
-                const newTNCs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_tnc/?ipath=${bookCode}.tsv`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newTNCs[bookCode] = response.text
-                            .split("\n")
-                            .map(
-                                r => r.split("\t")
-                                    .map(c => c.replace(/\\n/g, "\n"))
-                            );
-                        ;
-                    } else {
-                        console.log(`Could not load TNC for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setTNC(newTNCs);
-            };
-            getTNCs(["MRK"]).then();
-        },
-        []
-    );
-    useEffect(
-        () => {
-            const getTWs = async bookCodes => {
-                const newTWs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_tw/?ipath=${bookCode}.tsv`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newTWs[bookCode] = response.text
-                            .split("\n")
-                            .map(
-                                r => r.split("\t")
-                                    .map(c => c.replace(/\\n/g, "\n"))
-                            );
-                        ;
-                    } else {
-                        console.log(`Could not load TW for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setTW(newTWs);
-            };
-            getTWs(["MRK"]).then();
-        },
-        []
-    );
-
-    useEffect(
-        () => {
-            const getTWSs = async bookCodes => {
-                const newTWSs = {};
-                for (const bookCode of bookCodes) {
-                    const response = await getText(
-                        `/burrito/ingredient/raw/git.door43.org/BurritoTruck/fr_tws/?ipath=${bookCode}.tsv`,
-                        debugRef.current
-                    );
-                    if (response.ok) {
-                        newTWSs[bookCode] = response.text
-                            .split("\n")
-                            .map(
-                                r => r.split("\t")
-                                    .map(c => c.replace(/\\n/g, "\n"))
-                            );
-                        ;
-                    } else {
-                        console.log(`Could not load TWS for ${bookCode}: ${response.error}`);
-                    }
-                }
-                setTWS(newTWSs);
-            };
-            getTWSs(["MRK"]).then();
-        },
-        []
-    );
-
-    if (!section || !unit) {
+    if (!content["xpg"]["section"] || !unit) {
         return <p>Loading...</p>
     }
 
@@ -325,58 +24,6 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
         ["juxta", "Juxta"],
         ["juxtaGl", "Gloss"],
         ["gl", "Gateway"],
-    ];
-
-    const noteSpecs = [
-        {
-            "label": "Notes d'unfoldingWord",
-            "categories": {
-                "M": ["source"],
-                "L": ["gl"],
-                "C": ["gl", "juxtaGl"],
-                "E": ["juxtaGL", "gl"],
-                "G": ["juxtaGL", "gl"],
-                "V": ["juxtaGL", "gl"],
-            },
-            "type": "notes",
-            "content": TNC
-        },
-        {
-            "label": "Notes critiques",
-            "for": ["source"],
-            "type": "notes",
-            "content": CN
-        },
-        {
-            "label": "Verbes",
-            "for": ["source", "juxta"],
-            "type": "notes",
-            "content": AVX
-        },
-        {
-            "label": "uW Questions FR",
-            "for": ["juxtaGl", "gl"],
-            "type": "questions",
-            "content": TQ
-        },
-        {
-            "label": "Questions Worldview FR",
-            "for": ["gl"],
-            "type": "questions",
-            "content": SQ
-        },
-        {
-            "label": "Tyndale FR",
-            "for": ["gl"],
-            "type": "notes",
-            "content": TSN
-        },
-        {
-            "label": "Termes d'unfoldingWord",
-            "for": ["juxtaGl", "gl"],
-            "content": TW,
-            "secondaryContent": TWS
-        }
     ];
 
     return <Grid2 container spacing={2}>
@@ -410,18 +57,18 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
                             </Box>
                             {
                                 t[0] === "gl" &&
-                                GLs[sectionPointer[0]] &&
+                                content["gl"][sectionPointer[0]] &&
                                 <UsfmViewer
-                                    content={GLs[sectionPointer[0]]}
+                                    content={content["gl"][sectionPointer[0]]}
                                     sectionPointer={sectionPointer}
                                     cvs={unit.cv}
                                 />
                             }
                             {
                                 t[0] === "juxtaGl" &&
-                                juxtas[sectionPointer[0]] &&
+                                content["juxta"][sectionPointer[0]] &&
                                 <JuxtaGlossViewer
-                                    content={juxtas[sectionPointer[0]]}
+                                    content={content["juxta"][sectionPointer[0]]}
                                     sectionPointer={sectionPointer}
                                     firstSentence={unit.firstSentence}
                                     lastSentence={unit.lastSentence}
@@ -429,9 +76,9 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
                             }
                             {
                                 t[0] === "juxta" &&
-                                juxtas[sectionPointer[0]] &&
+                                content["juxta"][sectionPointer[0]] &&
                                 <JuxtaViewer
-                                    content={juxtas[sectionPointer[0]]}
+                                    content={content["juxta"][sectionPointer[0]]}
                                     sectionPointer={sectionPointer}
                                     firstSentence={unit.firstSentence}
                                     lastSentence={unit.lastSentence}
@@ -439,9 +86,9 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
                             }
                             {
                                 t[0] === "source" &&
-                                Sources[sectionPointer[0]] &&
+                                content["greekNT"][sectionPointer[0]] &&
                                 <UsfmViewer
-                                    content={Sources[sectionPointer[0]]}
+                                    content={content["greekNT"][sectionPointer[0]]}
                                     sectionPointer={sectionPointer}
                                     cvs={unit.cv}
                                 />
@@ -456,7 +103,7 @@ export default function UnitContent({sectionPointer, sectionOrders, sections, ju
             </Grid2>
             <Grid2 item size={12}>
                 {
-                    noteSpecs.filter(
+                    contentSpec.unitNotes.filter(
                         ns => selectedTexts
                                 .filter(t => ns.categories || ns.for.includes(t))
                                 .length
