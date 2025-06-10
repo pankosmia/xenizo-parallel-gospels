@@ -6,7 +6,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import CategoryNotesViewer from "./CategoryNotesViewer";
 import TwoPartNotes from "./TwoPartNotes";
 
-export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
+export default function NoteViewer({spec, bookCode, cv, selectedTexts, content}) {
     const [open, setOpen] = useState(false);
     const [showSecondary, setShowSecondary] = useState(true);
     const cvInRange = (cv, range) => {
@@ -29,7 +29,7 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
             return (cvVFrom <= rangeV && cvVTo >= rangeV);
         }
     }
-    if (!spec.content[bookCode]) {
+    if (!content[spec.id][bookCode]) {
         return "";
     }
 
@@ -42,7 +42,7 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
         "V": "Vocabulaire"
     }
 
-    const verseNotes = spec.content[bookCode]
+    const verseNotes = content[spec.id][bookCode]
         .filter(l => cvInRange(cv, l[0]))
         .filter(
             l => !spec.categories || (
@@ -68,7 +68,7 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
         return "";
     }
     if (spec.secondaryContent) {
-        spec.secondaryContent[bookCode]
+        content[spec.secondaryContent.id][bookCode]
             .filter(l => cvInRange(cv, l[0]))
             .map(l => [
                     "*",
@@ -109,11 +109,11 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
                 onClick={() => setOpen(!open)}
                 endIcon={open ? <ExpandLess/> : <ExpandMore/>}
             >
-                {`${spec.label} (${verseNotes.length})`}
+                {`${spec.dcs.name} (${verseNotes.length})`}
             </Button>
             {
                 open && <Stack>{
-                    spec.secondaryContent[bookCode]
+                    content[spec.secondaryContent.id][bookCode]
                         .filter(l => cvInRange(cv, l[0]))
                         .map(l => l[6] || l[5]
                         ).map(
@@ -138,7 +138,7 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts}) {
             onClick={() => setOpen(!open)}
             endIcon={open ? <ExpandLess/> : <ExpandMore/>}
         >
-            {`${spec.label} (${verseNotes.length})`}
+            {`${spec.dcs.name} (${verseNotes.length})`}
         </Button>
         {
             open && <Stack>{

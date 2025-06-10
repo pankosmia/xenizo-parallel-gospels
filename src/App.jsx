@@ -45,13 +45,14 @@ export default function App() {
                                         newContent[generalK][resourceK] = response.text
                                             .split("\n")
                                             .slice(1)
-                                            .map(r => r.split("\t"));
+                                            .map(r => r.split("\t").map(c => c.replace(/\\n/g, "\n")));
                                     } else if (resourceV.endsWith(".usfm")) {
                                         const pk = new Proskomma();
                                         pk.importDocument({lang: "xxx", abbr: "yyy"}, "usfm", response.text);
                                         const docSetId = pk.gqlQuerySync("{ docSets { id } }").data.docSets[0].id;
-                                        console.log(docSetId);
                                         newContent[generalK][resourceK] = pk.serializeSuccinct(docSetId);
+                                    } else {
+                                        newContent[generalK][resourceK] = response.text;
                                     }
                                 } else {
                                     console.log(`Could not load ${resourceV} for ${generalK} (${generalV[lang].dcs.repoPath}): ${response.error}`);
@@ -71,7 +72,22 @@ export default function App() {
                                 if (!newContent[unitRecord.id]) {
                                     newContent[unitRecord.id] = {};
                                 }
-                                newContent[unitRecord.id][resourceK] = resourceV.endsWith(".json") ? response.json : response.text;
+                                if (resourceV.endsWith(".json")) {
+                                    newContent[unitRecord.id][resourceK] = response.json;
+                                } else if (resourceV.endsWith(".tsv")) {
+                                    newContent[unitRecord.id][resourceK] = response.text
+                                        .split("\n")
+                                        .slice(1)
+                                        .map(r => r.split("\t").map(c => c.replace(/\\n/g, "\n")));
+                                } else if (resourceV.endsWith(".usfm")) {
+                                    const pk = new Proskomma();
+                                    pk.importDocument({lang: "xxx", abbr: "yyy"}, "usfm", response.text);
+                                    const docSetId = pk.gqlQuerySync("{ docSets { id } }").data.docSets[0].id;
+                                    console.log(docSetId);
+                                    newContent[unitRecord.id][resourceK] = pk.serializeSuccinct(docSetId);
+                                } else {
+                                    newContent[unitRecord.id][resourceK] = response.text;
+                                }
                             } else {
                                 console.log(`Could not load ${resourceV} for ${unitRecord.id} (${unitRecord.dcs.repoPath}): ${response.error}`);
                             }
@@ -88,7 +104,22 @@ export default function App() {
                                     if (!newContent[unitRecord.secondaryContent.id]) {
                                         newContent[unitRecord.secondaryContent.id] = {};
                                     }
-                                    newContent[unitRecord.secondaryContent.id][resourceK] = resourceV.endsWith(".json") ? response.json : response.text;
+                                    if (resourceV.endsWith(".json")) {
+                                        newContent[unitRecord.secondaryContent.id][resourceK] = response.json;
+                                    } else if (resourceV.endsWith(".tsv")) {
+                                        newContent[unitRecord.secondaryContent.id][resourceK] = response.text
+                                            .split("\n")
+                                            .slice(1)
+                                            .map(r => r.split("\t").map(c => c.replace(/\\n/g, "\n")));
+                                    } else if (resourceV.endsWith(".usfm")) {
+                                        const pk = new Proskomma();
+                                        pk.importDocument({lang: "xxx", abbr: "yyy"}, "usfm", response.text);
+                                        const docSetId = pk.gqlQuerySync("{ docSets { id } }").data.docSets[0].id;
+                                        console.log(docSetId);
+                                        newContent[unitRecord.secondaryContent.id][resourceK] = pk.serializeSuccinct(docSetId);
+                                    } else {
+                                        newContent[unitRecord.secondaryContent.id][resourceK] = response.text;
+                                    }
                                 } else {
                                     console.log(`Could not load secondary content ${resourceV} for ${unitRecord.secondaryContent.id} (${unitRecord.secondaryContent.dcs.repoPath}): ${response.error}`);
                                 }

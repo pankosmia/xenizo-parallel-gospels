@@ -1,6 +1,5 @@
 import {Box, Grid2, ToggleButton, ToggleButtonGroup, Typography} from "@mui/material";
-import {useState, useEffect, useContext} from "react";
-import {getText, debugContext} from "pithekos-lib";
+import {useState} from "react";
 import UsfmViewer from "./UsfmViewer";
 import JuxtaGlossViewer from "./JuxtaGlossViewer";
 import JuxtaViewer from "./JuxtaViewer";
@@ -9,13 +8,30 @@ import NoteViewer from "./NoteViewer";
 const contentSpec = require("../contentSpec.json");
 
 export default function UnitContent({sectionPointer, content}) {
-    const [unit, setUnit] = useState(null);
     const [selectedTexts, setSelectedTexts] = useState(["gl"]);
 
-    setUnit(content["xpg"]["sections"][sectionPointer[0]].units[sectionPointer[2]]);
+    const sectionsForBook = bookCode => {
+        return Object.entries(content["xpg"]["sections"])
+            .filter(s => s[1][bookCode].cvs)
+            .sort(
+                (a, b) => {
+                    const cvA = a[1][bookCode].cvs;
+                    const cA = parseInt(cvA.split(":")[0]);
+                    const cvB = b[1][bookCode].cvs;
+                    const cB = parseInt(cvB.split(":")[0]);
+                    if (cA !== cB) {
+                        return cA - cB;
+                    }
+                    const vA = parseInt(cvA.split(":")[1].split("-")[0]);
+                    const vB = parseInt(cvB.split(":")[1].split("-")[0]);
+                    return vA - vB;
+                }
+            )
+    }
+    const bookSectionEntries = sectionsForBook(sectionPointer[0]);
+    const unit = bookSectionEntries[sectionPointer[1]][1][sectionPointer[0]]["units"][sectionPointer[2]];
 
-
-    if (!content["xpg"]["section"] || !unit) {
+    if (!content["xpg"]["sections"] || !unit) {
         return <p>Loading...</p>
     }
 
@@ -112,6 +128,7 @@ export default function UnitContent({sectionPointer, content}) {
                         .map(
                             ns => <NoteViewer
                                 spec={ns}
+                                content={content}
                                 bookCode={sectionPointer[0]}
                                 cv={unit.cv}
                                 selectedTexts={selectedTexts}

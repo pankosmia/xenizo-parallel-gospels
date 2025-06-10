@@ -18,7 +18,7 @@ export default function PaneContentPicker({sectionPointer, paneChoiceGetter, pan
                 for (const bookRecord of (Object.entries(section || {}))
                     .filter(kv => (Object.entries(kv[1]).length > 0) && (kv[0] !== sectionPointer[0]))
                     ) {
-                    newFullPaneChoices[bookRecord[0]] = `|| ${bookRecord[0]}`;
+                    newFullPaneChoices[bookRecord[0]] = `|| ${bookRecord[0]} ${bookRecord[1].cvs}`;
                 }
                 setFullPaneChoices(newFullPaneChoices);
             }

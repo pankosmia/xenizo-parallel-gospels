@@ -15,7 +15,7 @@ export default function CategoryNotesViewer({spec, notes, categoryLabel}) {
             onClick={() => setOpen(!open)}
             endIcon={open ? <ExpandLess/> : <ExpandMore/>}
         >
-            {`${categoryLabel} - ${spec.label} (${notes.length})`}
+            {`${categoryLabel} - ${spec.dcs.name} (${notes.length})`}
         </Button>
         {
             open && <Stack>{
