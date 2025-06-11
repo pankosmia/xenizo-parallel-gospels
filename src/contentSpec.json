@@ -49,6 +49,18 @@
             "JHN": "JHN.md"
           }
         }
+      },
+      "en": {
+        "dcs": {
+          "name": "Scripture book introductions by Xenizo (XBI)",
+          "repoPath": "git.door43.org/BurritoTruck/en_xenizo_book-notes",
+          "resources": {
+            "MAT": "MAT.md",
+            "MRK": "MRK.md",
+            "LUK": "LUK.md",
+            "JHN": "JHN.md"
+          }
+        }
       }
     },
     "greekNT": {
@@ -62,8 +74,7 @@
             "LUK": "LUK.usfm",
             "JHN": "JHN.usfm"
           }
-        },
-        "succinctify": true
+        }
       }
     },
     "gl": {
@@ -77,12 +88,35 @@
             "LUK": "LUK.usfm",
             "JHN": "JHN.usfm"
           }
-        },
-        "succinctify": true
+        }
+      },
+      "en": {
+        "dcs": {
+          "name": "Berean Standard Bible (BSB)",
+          "repoPath": "git.door43.org/BurritoTruck/en_bsb",
+          "resources": {
+            "MAT": "MAT.usfm",
+            "MRK": "MRK.usfm",
+            "LUK": "LUK.usfm",
+            "JHN": "JHN.usfm"
+          }
+        }
       }
     },
     "sectionNotes": {
       "fr": {
+        "dcs": {
+          "name": "Notes de Section de Xenizo (NSX)",
+          "repoPath": "git.door43.org/BurritoTruck/fr_sn",
+          "resources": {
+            "MAT": "MAT.tsv",
+            "MRK": "MRK.tsv",
+            "LUK": "LUK.tsv",
+            "JHN": "JHN.tsv"
+          }
+        }
+      },
+      "en": {
         "dcs": {
           "name": "Notes de Section de Xenizo (NSX)",
           "repoPath": "git.door43.org/BurritoTruck/fr_sn",

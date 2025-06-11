@@ -33,7 +33,6 @@ export default function RequireResources({contentSpec, languages, children}) {
             missingResources.push(roleCode);
         }
     }
-    console.log("Missing", missingResources);
     if (missingResources.length > 0) {
         return <Stack>
             <Typography variant="h6">{"- "}{doI18n("components:require_resources:missing_resources", i18nRef.current)}</Typography>
