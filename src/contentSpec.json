@@ -17,13 +17,22 @@
     "juxta": {
       "fr": {
         "dcs": {
-          "name": "New testament Juxtalinear(NTJXT)",
+          "name": "Juxtalinéaire (NTJXT)",
           "repoPath": "git.door43.org/BurritoTruck/fr_juxta",
           "resources": {
             "MAT": "MAT.json",
             "MRK": "MRK.json",
             "LUK": "LUK.json",
             "JHN": "JHN.json"
+          }
+        }
+      },
+      "en": {
+        "dcs": {
+          "name": "Juxtalinear (NTJXTEN)",
+          "repoPath": "git.door43.org/BurritoTruck/en_juxta",
+          "resources": {
+            "MRK": "MRK.json"
           }
         }
       }

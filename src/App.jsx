@@ -1,8 +1,8 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useEffect, useState, useContext} from "react";
 import RequireResources from "./components/RequireResources";
 import {Box, CircularProgress} from "@mui/material";
 import ContentViewer from "./components/ContentViewer";
-import {getJson, getText} from "pithekos-lib";
+import {getJson, getAndSetJson, getText, debugContext} from "pithekos-lib";
 import {Proskomma} from "proskomma-core";
 
 const contentSpec = require("./contentSpec.json");
@@ -10,9 +10,22 @@ const contentSpec = require("./contentSpec.json");
 export default function App() {
     const [maxWindowHeight, setMaxWindowHeight] = useState(window.innerHeight - 80);
     const [content, setContent] = useState({});
+    const [languages, setLanguages] = useState(['fr']);
+    const {debugRef} = useContext(debugContext);
     const handleWindowResize = useCallback(event => {
         setMaxWindowHeight(window.innerHeight - 80);
     }, []);
+
+    useEffect(
+        () => {
+            getAndSetJson({
+                url: "/settings/languages",
+                setter: setLanguages,
+                debug: debugRef.current
+            })
+        },
+        []
+    );
 
     useEffect(() => {
             window.addEventListener('resize', handleWindowResize);
@@ -133,10 +146,7 @@ export default function App() {
             getContent().then();
         },
         []
-    )
-    ;
-
-    console.log(content);
+    );
 
     if (Object.keys(content).length === 0) {
         return <CircularProgress/>
@@ -144,24 +154,8 @@ export default function App() {
 
     return <Box sx={{maxHeight: maxWindowHeight}}>
         <RequireResources
-            required={[
-                ["Xenizo Parallel Gospels (XPG)", "git.door43.org/BurritoTruck/en_syn",],
-                ["New testament Juxtalinear (NTJXT)", "git.door43.org/BurritoTruck/fr_juxta"],
-                ["Introductions de Livre Xenizo (ILX)", "git.door43.org/BurritoTruck/fr_xenizo_book-notes",],
-                ["unfoldingWord Greek New Testament (UGNT)", "git.door43.org/uW/grc_ugnt"],
-                ["Pain sur les eaux (PSLE)", "git.door43.org/BurritoTruck/fr_psle"],
-                ["Notes de Section de Xenizo (NSX)", "git.door43.org/BurritoTruck/fr_sn"],
-                ["unfoldingWord UGNT", "git.door43.org/uW/grc_ugnt"],
-                ["Pain sur les eaux (PSLE)", "git.door43.org/BurritoTruck/fr_psle"],
-                ["Notes d'étude Tyndale en français (TSNFR)", "git.door43.org/BurritoTruck/fr_tsn"],
-                ["Notes critiques (NCX)", "git.door43.org/BurritoTruck/fr_cn"],
-                ["Analyse Verbal Xenizo (AVX)", "git.door43.org/BurritoTruck/fr_vp"],
-                ["Questions d'étude de Worldview (SQ)", "git.door43.org/BurritoTruck/fr_sq"],
-                ["unfoldingWord translationQuestions (TQ)", "git.door43.org/uW/en_tq"],
-                ["Notes de traduction d'unfoldingWord avec catégories (TNCFR)", "git.door43.org/BurritoTruck/fr_tnc"],
-                ["Termes de traduction d'unfoldingWord (TWFR)", "git.door43.org/BurritoTruck/fr_tw"],
-                ["Résumés de Termes de traduction d'unfoldingWord (TWSFR)", "git.door43.org/BurritoTruck/fr_tws"]
-            ]}
+            contentSpec={contentSpec}
+            languages={languages}
         >
             <ContentViewer content={content}/>
         </RequireResources>
