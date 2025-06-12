@@ -262,6 +262,7 @@ export default function ContentNavigator(
             </AppBar>
             <Parallel
                 content={content}
+                languages={languages}
             />
         </Dialog>
     </>

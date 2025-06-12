@@ -4,7 +4,7 @@ import {Box, Button, ButtonGroup, Grid2, Stack, Typography} from "@mui/material"
 import JuxtaGlossViewer from "./JuxtaGlossViewer";
 import UsfmViewer from "./UsfmViewer";
 
-export default function Parallel({content}) {
+export default function Parallel({content, languages}) {
 
     const [contentView, setContentView] = useState("gl");
     const [openSection, setOpenSection] = useState(null);
@@ -62,7 +62,7 @@ export default function Parallel({content}) {
                                 <Typography
                                     variant="h5"
                                 >{
-                                    content["xpg"]["i18nFR"][sectionId]["title"]
+                                    content["xpg"]["i18n" + languages[0].toUpperCase()][sectionId]["title"]
                                 }</Typography>
                             </Grid2>
                             {
