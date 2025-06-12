@@ -7,7 +7,7 @@ import NoteViewer from "./NoteViewer";
 
 const contentSpec = require("../contentSpec.json");
 
-export default function UnitContent({sectionPointer, content}) {
+export default function UnitContent({sectionPointer, content, languages}) {
     const [selectedTexts, setSelectedTexts] = useState(["gl"]);
 
     const sectionsForBook = bookCode => {
@@ -119,7 +119,9 @@ export default function UnitContent({sectionPointer, content}) {
             </Grid2>
             <Grid2 item size={12}>
                 {
-                    contentSpec.unitNotes.filter(
+                    contentSpec.unitNotes
+                        .filter(un => content[un.id])
+                        .filter(
                         ns => selectedTexts
                                 .filter(t => ns.categories || ns.for.includes(t))
                                 .length

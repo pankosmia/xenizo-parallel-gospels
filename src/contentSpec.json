@@ -119,7 +119,7 @@
       "en": {
         "dcs": {
           "name": "Notes de Section de Xenizo (NSX)",
-          "repoPath": "git.door43.org/BurritoTruck/fr_sn",
+          "repoPath": "git.door43.org/BurritoTruck/en_sn",
           "resources": {
             "MAT": "MAT.tsv",
             "MRK": "MRK.tsv",

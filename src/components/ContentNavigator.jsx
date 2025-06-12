@@ -12,7 +12,8 @@ export default function ContentNavigator(
         setNavLevel,
         sectionPointer,
         setSectionPointer,
-        content
+        content,
+        languages
     }
 ) {
     const sectionsForBook = bookCode => {
@@ -147,7 +148,7 @@ export default function ContentNavigator(
                 ret.push(<Typography variant="caption">{destination[0]}</Typography>);
             }
             ret.push(<Typography
-                variant="body2">{content["xpg"]["i18nFR"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
+                variant="body2">{content["xpg"]["i18n" + languages[0].toUpperCase()][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
             return ret;
         }
         let ret = [];
@@ -156,7 +157,7 @@ export default function ContentNavigator(
         }
         if (destination[1] !== sectionPointer[1]) {
             ret.push(<Typography
-                variant="caption">{content["xpg"]["i18nFR"][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
+                variant="caption">{content["xpg"]["i18n" + languages[0].toUpperCase()][destinationBookSections[destination[1]][0]]["title"]}</Typography>);
         }
         ret.push(<Typography
             variant="body2">{destinationBookSections[destination[1]][1][destination[0]]["units"][destination[2]]["cv"]}</Typography>);
@@ -211,7 +212,7 @@ export default function ContentNavigator(
                     onClick={() => setNavLevel("section")}
                 >
                     <Typography variant="body2">
-                        {content["xpg"]["i18nFR"][bookSections[sectionPointer[1]][0]]["title"]}
+                        {content["xpg"]["i18n" + languages[0].toUpperCase()][bookSections[sectionPointer[1]][0]]["title"]}
                         {" ("}
                         {bookSections[sectionPointer[1]][1][sectionPointer[0]]["cvs"]}
                         {")"}

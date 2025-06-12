@@ -2,7 +2,7 @@ import {useCallback, useEffect, useState, useContext} from "react";
 import RequireResources from "./components/RequireResources";
 import {Box, CircularProgress} from "@mui/material";
 import ContentViewer from "./components/ContentViewer";
-import {getJson, getAndSetJson, getText, debugContext} from "pithekos-lib";
+import {getJson, getAndSetJson, getText, debugContext, i18nContext} from "pithekos-lib";
 import {Proskomma} from "proskomma-core";
 
 const contentSpec = require("./contentSpec.json");
@@ -10,21 +10,23 @@ const contentSpec = require("./contentSpec.json");
 export default function App() {
     const [maxWindowHeight, setMaxWindowHeight] = useState(window.innerHeight - 80);
     const [content, setContent] = useState({});
-    const [languages, setLanguages] = useState(['fr']);
+    const [languages, setLanguages] = useState([]);
     const {debugRef} = useContext(debugContext);
+    const {i18n} = useContext(i18nContext);
     const handleWindowResize = useCallback(event => {
         setMaxWindowHeight(window.innerHeight - 80);
     }, []);
 
     useEffect(
         () => {
+            console.log("Loading language");
             getAndSetJson({
                 url: "/settings/languages",
                 setter: setLanguages,
                 debug: debugRef.current
             })
         },
-        []
+        [i18n]
     );
 
     useEffect(() => {
@@ -38,15 +40,21 @@ export default function App() {
     useEffect(
         () => {
             const getContent = async () => {
+                    if (languages.length === 0) {
+                        return
+                    }
                     const newContent = {};
                     for (const [generalK, generalV] of Object.entries(contentSpec.general)) {
-                        for (const lang of Object.keys(generalV)) {
+                        for (const lang of ["_all", ...languages]) {
+                            if (!Object.keys(generalV).includes(lang)) {
+                                continue;
+                            }
                             for (const [resourceK, resourceV] of Object.entries(generalV[lang].dcs.resources)) {
                                 let response;
                                 if (resourceV.endsWith(".json")) {
-                                    response = await getJson(`/burrito/ingredient/raw/${generalV[lang].dcs.repoPath}?ipath=${resourceV}`);
+                                    response = await getJson(`/burrito/ingredient/raw/${generalV[lang].dcs.repoPath}?ipath=${resourceV}`, debugRef.current);
                                 } else {
-                                    response = await getText(`/burrito/ingredient/raw/${generalV[lang].dcs.repoPath}?ipath=${resourceV}`);
+                                    response = await getText(`/burrito/ingredient/raw/${generalV[lang].dcs.repoPath}?ipath=${resourceV}`, debugRef.current);
                                 }
                                 if (response.ok) {
                                     if (!newContent[generalK]) {
@@ -71,15 +79,16 @@ export default function App() {
                                     console.log(`Could not load ${resourceV} for ${generalK} (${generalV[lang].dcs.repoPath}): ${response.error}`);
                                 }
                             }
+                            break;
                         }
                     }
-                    for (const unitRecord of contentSpec.unitNotes) {
+                    for (const unitRecord of contentSpec.unitNotes.filter(un => ["_all", ...languages].includes(un.lang))) {
                         for (const [resourceK, resourceV] of Object.entries(unitRecord.dcs.resources)) {
                             let response;
                             if (resourceV.endsWith(".json")) {
-                                response = await getJson(`/burrito/ingredient/raw/${unitRecord.dcs.repoPath}?ipath=${resourceV}`);
+                                response = await getJson(`/burrito/ingredient/raw/${unitRecord.dcs.repoPath}?ipath=${resourceV}`, debugRef.current);
                             } else {
-                                response = await getText(`/burrito/ingredient/raw/${unitRecord.dcs.repoPath}?ipath=${resourceV}`);
+                                response = await getText(`/burrito/ingredient/raw/${unitRecord.dcs.repoPath}?ipath=${resourceV}`, debugRef.current);
                             }
                             if (response.ok) {
                                 if (!newContent[unitRecord.id]) {
@@ -109,9 +118,9 @@ export default function App() {
                             for (const [resourceK, resourceV] of Object.entries(unitRecord.dcs.resources)) {
                                 let response;
                                 if (resourceV.endsWith(".json")) {
-                                    response = await getJson(`/burrito/ingredient/raw/${unitRecord.secondaryContent.dcs.repoPath}?ipath=${resourceV}`);
+                                    response = await getJson(`/burrito/ingredient/raw/${unitRecord.secondaryContent.dcs.repoPath}?ipath=${resourceV}`, debugRef.current);
                                 } else {
-                                    response = await getText(`/burrito/ingredient/raw/${unitRecord.secondaryContent.dcs.repoPath}?ipath=${resourceV}`);
+                                    response = await getText(`/burrito/ingredient/raw/${unitRecord.secondaryContent.dcs.repoPath}?ipath=${resourceV}`, debugRef.current);
                                 }
                                 if (response.ok) {
                                     if (!newContent[unitRecord.secondaryContent.id]) {
@@ -141,11 +150,10 @@ export default function App() {
                         }
                     }
                     setContent(newContent);
-                }
-            ;
+                };
             getContent().then();
         },
-        []
+        [languages]
     );
 
     if (Object.keys(content).length === 0) {
@@ -157,7 +165,7 @@ export default function App() {
             contentSpec={contentSpec}
             languages={languages}
         >
-            <ContentViewer content={content}/>
+            <ContentViewer content={content} languages={languages}/>
         </RequireResources>
     </Box>;
 }

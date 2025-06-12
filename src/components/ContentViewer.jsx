@@ -5,11 +5,11 @@ import BookContent from "./BookContent";
 import SectionContent from "./SectionContent";
 import UnitContent from "./UnitContent";
 
-export default function ContentViewer ({content}) {
+export default function ContentViewer ({content, languages}) {
     const [sectionPointer, setSectionPointer] = useState(["MRK", 0, 0]);
     const [navLevel, setNavLevel] = useState("book");
 
-    if (!content["xpg"]["sections"] || !content["xpg"]["i18nFR"]) {
+    if (!content["xpg"]["sections"] || !content["xpg"]["i18n" + languages[0].toUpperCase()]) {
         return <Box>Loading...</Box>
     }
 
@@ -23,6 +23,7 @@ export default function ContentViewer ({content}) {
             setSectionPointer={setSectionPointer}
             navLevel={navLevel}
             setNavLevel={setNavLevel}
+            languages={languages}
         />
         {
             (navLevel === "book") &&
@@ -43,6 +44,7 @@ export default function ContentViewer ({content}) {
             <UnitContent
                 sectionPointer={sectionPointer}
                 content={content}
+                languages={languages}
             />
         }
     </Stack>
