@@ -169,6 +169,59 @@
       "type": "notes"
     },
     {
+      "id": "tNcEn",
+      "lang": "en",
+      "dcs": {
+        "name": "unfoldingWord translationNotes with categories (TNC)",
+        "repoPath": "git.door43.org/BurritoTruck/en_tnc",
+        "resources": {
+          "MRK": "MRK.tsv"
+        }
+      },
+      "appLabel": "unfoldingWord Notes",
+      "categories": {
+        "M": [
+          "source"
+        ],
+        "L": [
+          "gl"
+        ],
+        "C": [
+          "gl",
+          "juxtaGl"
+        ],
+        "E": [
+          "juxtaGL",
+          "gl"
+        ],
+        "G": [
+          "juxtaGL",
+          "gl"
+        ],
+        "V": [
+          "juxtaGL",
+          "gl"
+        ]
+      },
+      "type": "notes"
+    },
+    {
+      "id": "CnEn",
+      "lang": "en",
+      "dcs": {
+        "name": "Critical Notes (XCN)",
+        "repoPath": "git.door43.org/BurritoTruck/en_cn",
+        "resources": {
+          "MRK": "MRK.tsv"
+        }
+      },
+      "appLabel": "Critical Notes",
+      "for": [
+        "source"
+      ],
+      "type": "notes"
+    },
+    {
       "id": "CnFr",
       "lang": "fr",
       "dcs": {
@@ -222,6 +275,26 @@
       "type": "questions"
     },
     {
+      "id": "tQFr",
+      "lang": "fr",
+      "dcs": {
+        "name": "Questions de traduction d'unfoldingWord®",
+        "repoPath": "git.door43.org/uW/fr_tq",
+        "resources": {
+          "MAT": "MAT.tsv",
+          "MRK": "MRK.tsv",
+          "LUK": "LUK.tsv",
+          "JHN": "JHN.tsv"
+        }
+      },
+      "appLabel": "Questions de traduction d'uW",
+      "for": [
+        "juxtaGl",
+        "gl"
+      ],
+      "type": "questions"
+    },
+    {
       "id": "sQFr",
       "lang": "fr",
       "dcs": {
@@ -233,6 +306,24 @@
         }
       },
       "appLabel": "Worldview Questions FR",
+      "for": [
+        "gl"
+      ],
+      "type": "questions"
+    },
+    {
+      "id": "sQEn",
+      "lang": "en",
+      "dcs": {
+        "name": "Worldview Study Questions (SQ)",
+        "repoPath": "git.door43.org/BurritoTruck/en_sq",
+        "resources": {
+          "MRK": "MAT.tsv",
+          "MRK": "MRK.tsv",
+          "LUK": "LUK.tsv"
+        }
+      },
+      "appLabel": "Worldview Questions",
       "for": [
         "gl"
       ],
@@ -252,6 +343,25 @@
         }
       },
       "appLabel": "Tyndale FR",
+      "for": [
+        "gl"
+      ],
+      "type": "notes"
+    },
+    {
+      "id": "TsnEn",
+      "lang": "en",
+      "dcs": {
+        "name": "Tyndale Study Notes (TSN)",
+        "repoPath": "git.door43.org/BurritoTruck/en_tsn",
+        "resources": {
+          "MAT": "MAT.tsv",
+          "MRK": "MRK.tsv",
+          "LUK": "LUK.tsv",
+          "JHN": "JHN.tsv"
+        }
+      },
+      "appLabel": "Tyndale",
       "for": [
         "gl"
       ],

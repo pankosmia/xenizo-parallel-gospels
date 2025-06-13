@@ -49,7 +49,13 @@ export default function App() {
                             if (!Object.keys(generalV).includes(lang)) {
                                 continue;
                             }
+                            if (newContent[generalK]) {
+                                continue;
+                            }
                             for (const [resourceK, resourceV] of Object.entries(generalV[lang].dcs.resources)) {
+                                if (newContent[resourceK]) {
+                                    continue;
+                                }
                                 let response;
                                 if (resourceV.endsWith(".json")) {
                                     response = await getJson(`/burrito/ingredient/raw/${generalV[lang].dcs.repoPath}?ipath=${resourceV}`, debugRef.current);
@@ -82,7 +88,7 @@ export default function App() {
                             break;
                         }
                     }
-                    for (const unitRecord of contentSpec.unitNotes.filter(un => ["_all", ...languages].includes(un.lang))) {
+                    for (const unitRecord of contentSpec.unitNotes.filter(un => ["_all", languages[0]].includes(un.lang))) {
                         for (const [resourceK, resourceV] of Object.entries(unitRecord.dcs.resources)) {
                             let response;
                             if (resourceV.endsWith(".json")) {

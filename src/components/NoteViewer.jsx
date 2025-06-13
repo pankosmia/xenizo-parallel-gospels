@@ -6,7 +6,7 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import CategoryNotesViewer from "./CategoryNotesViewer";
 import TwoPartNotes from "./TwoPartNotes";
 
-export default function NoteViewer({spec, bookCode, cv, selectedTexts, content}) {
+export default function NoteViewer({spec, bookCode, cv, selectedTexts, content, languages}) {
     const [open, setOpen] = useState(false);
     const [showSecondary, setShowSecondary] = useState(true);
     const cvInRange = (cv, range) => {
@@ -34,12 +34,22 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts, content})
     }
 
     const noteCategories = {
-        "M": "Manuscrits",
-        "L": "Dans votre langue...",
-        "C": "Infos culturelles",
-        "E": "Expliciter",
-        "G": "Grammaire",
-        "V": "Vocabulaire"
+        en: {
+            "M": "Manuscripts",
+            "L": "In your language...",
+            "C": "Cultural information",
+            "E": "Spell it out",
+            "G": "Grammar",
+            "V": "Vocabulary"
+        },
+        fr: {
+            "M": "Manuscrits",
+            "L": "Dans votre langue...",
+            "C": "Infos culturelles",
+            "E": "Expliciter",
+            "G": "Grammaire",
+            "V": "Vocabulaire"
+        }
     }
 
     const verseNotes = content[spec.id][bookCode]
@@ -85,6 +95,7 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts, content})
             }
             notesByCategory[verseNoteTuple[0]].push(verseNoteTuple[1]);
         }
+        const language = languages[0] === "fr" ? "fr" : "en";
         return <>{
             Object.entries(notesByCategory)
                 .sort(
@@ -93,7 +104,7 @@ export default function NoteViewer({spec, bookCode, cv, selectedTexts, content})
                 .map(
                     kv => <CategoryNotesViewer
                         spec={spec}
-                        categoryLabel={noteCategories[kv[0]]}
+                        categoryLabel={noteCategories[language][kv[0]]}
                         notes={kv[1]}
                     />
                 )

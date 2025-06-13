@@ -134,6 +134,7 @@ export default function UnitContent({sectionPointer, content, languages}) {
                                 bookCode={sectionPointer[0]}
                                 cv={unit.cv}
                                 selectedTexts={selectedTexts}
+                                languages={languages}
                             />
                         )
                 }
