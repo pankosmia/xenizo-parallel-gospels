@@ -374,7 +374,10 @@
         "name": "Termes de traduction d'unfoldingWord (TWFR)",
         "repoPath": "git.door43.org/BurritoTruck/fr_tw",
         "resources": {
-          "MRK": "MRK.tsv"
+          "MAT": "MAT.tsv",
+          "MRK": "MRK.tsv",
+          "LUK": "LUK.tsv",
+          "JHN": "JHN.tsv"
         }
       },
       "appLabel": "Termes d'unfoldingWord",
@@ -387,6 +390,32 @@
         "dcs": {
           "name": "Résumés de Termes de traduction d'unfoldingWord (TWSFR)",
           "repoPath": "git.door43.org/BurritoTruck/fr_tws"
+        }
+      }
+    },
+    {
+      "id": "tWEn",
+      "lang": "en",
+      "dcs": {
+        "name": "unfoldingWord translationWords (TW)",
+        "repoPath": "git.door43.org/uW/en_tw",
+        "resources": {
+          "MAT": "MAT.tsv",
+          "MRK": "MRK.tsv",
+          "LUK": "LUK.tsv",
+          "JHN": "JHN.tsv"
+        }
+      },
+      "appLabel": "unfoldingWord tW",
+      "for": [
+        "juxtaGl",
+        "gl"
+      ],
+      "secondaryContent": {
+        "id": "tWSEn",
+        "dcs": {
+          "name": "unfoldingWord translationWords summaries (TWSEN",
+          "repoPath": "git.door43.org/BurritoTruck/en_tws"
         }
       }
     }
