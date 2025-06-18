@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState, useContext} from "react";
+import {useEffect, useState, useContext} from "react";
 import RequireResources from "./components/RequireResources";
 import {Box, CircularProgress} from "@mui/material";
 import ContentViewer from "./components/ContentViewer";
@@ -8,14 +8,10 @@ import {Proskomma} from "proskomma-core";
 const contentSpec = require("./contentSpec.json");
 
 export default function App() {
-    const [maxWindowHeight, setMaxWindowHeight] = useState(window.innerHeight - 80);
     const [content, setContent] = useState({});
     const [languages, setLanguages] = useState([]);
     const {debugRef} = useContext(debugContext);
     const {i18n} = useContext(i18nContext);
-    const handleWindowResize = useCallback(event => {
-        setMaxWindowHeight(window.innerHeight - 80);
-    }, []);
 
     useEffect(
         () => {
@@ -27,14 +23,6 @@ export default function App() {
             })
         },
         [i18n]
-    );
-
-    useEffect(() => {
-            window.addEventListener('resize', handleWindowResize);
-            return () => {
-                window.removeEventListener('resize', handleWindowResize);
-            };
-        }, [handleWindowResize]
     );
 
     useEffect(
@@ -166,12 +154,14 @@ export default function App() {
         return <CircularProgress/>
     }
 
-    return <Box sx={{maxHeight: maxWindowHeight}}>
+    return <Box sx={{ mb: 2, position: 'fixed', top: '64px', bottom: 0, right: 0, overflow: 'scroll', width: '100%' }}>
+      <Box sx={{mx: 2}}>
         <RequireResources
             contentSpec={contentSpec}
             languages={languages}
         >
             <ContentViewer content={content} languages={languages}/>
         </RequireResources>
+      </Box>
     </Box>;
 }
