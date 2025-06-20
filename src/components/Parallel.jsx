@@ -91,7 +91,7 @@ export default function Parallel({content, languages}) {
                                                                 "-"
                                                         }</Typography>
                                                         {
-                                                            contentView === "juxtaGl" && content["xpg"]["sections"][sectionId][bookCode]["firstSentence"] &&
+                                                            contentView === "juxtaGl" && content["juxta"][bookCode] && content["xpg"]["sections"][sectionId][bookCode]["firstSentence"] &&
                                                             <Box sx={{fontSize: "small"}}>
                                                                 <JuxtaGlossViewer
                                                                     content={content["juxta"][bookCode]}
@@ -101,7 +101,7 @@ export default function Parallel({content, languages}) {
                                                             </Box>
                                                         }
                                                         {
-                                                            contentView === "gl" && content["xpg"]["sections"][sectionId][bookCode]["cvs"] &&
+                                                            contentView === "gl" && content["gl"][bookCode] && content["xpg"]["sections"][sectionId][bookCode]["cvs"] &&
                                                             <Box>
                                                                 <UsfmViewer
                                                                     content={content["gl"][bookCode]}
@@ -111,7 +111,7 @@ export default function Parallel({content, languages}) {
                                                             </Box>
                                                         }
                                                         {
-                                                            contentView === "source" && content["xpg"]["sections"][sectionId][bookCode]["cvs"] &&
+                                                            contentView === "source" && content["greekNT"][bookCode] && content["xpg"]["sections"][sectionId][bookCode]["cvs"] &&
                                                             <Box>
                                                                 <UsfmViewer
                                                                     content={content["greekNT"][bookCode]}
